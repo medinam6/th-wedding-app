@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Upload, Download, Edit, Trash2, UserPlus } from 'lucide-react';
 import AddGuestModal from './AddGuestModal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { formatPhoneNumber } from './guestListUtility';
 
 const GuestListManager = () => {
@@ -11,6 +12,7 @@ const GuestListManager = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [guestToDelete, setGuestToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingGuest, setEditingGuest] = useState(null);
@@ -18,8 +20,6 @@ const GuestListManager = () => {
   const fetchGuests = async () => {
     try {
       const response = await fetch('api/guestList');
-      console.log('API Response', response);
-
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Error response', errorText);
@@ -27,12 +27,14 @@ const GuestListManager = () => {
       }
 
       const data = await response.json();
-      setGuests(Array.isArray(data) ? data : []);
+      // Filter out soft-deleted guests
+      const activeGuests = Array.isArray(data) ? data.filter(guest => !guest.isDeleted) : [];
+      setGuests(activeGuests);
     } catch (error) {
       console.error('Detailed fetch error', error);
       setGuests([]);
     }
-  }
+  };
 
   const handleAddGuest = async (guestData) => {
     try {
@@ -65,13 +67,21 @@ const GuestListManager = () => {
     }
   };
 
+  // Soft Delete Guest
   const handleDeleteGuest = async (id) => {
     try {
-      const response = await fetch(`/api/guestList?id=${id}`, {
-        method: 'DELETE'
+      const response = await fetch(`/api/guestList`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          isDeleted: true,
+          lastUpdated: new Date().toISOString(),
+        })
       });
       if (response.ok) {
         fetchGuests(); // Refresh the list
+        setGuestToDelete(null); // Clear the selected guest
         setIsDeleteModalOpen(false);
       }
     } catch (error) {
@@ -274,7 +284,10 @@ const GuestListManager = () => {
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => setEditingGuest(null)}
+                          onClick={() => {
+                            setGuestToDelete(guest);
+                            setIsDeleteModalOpen(true);
+                          }}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -291,7 +304,19 @@ const GuestListManager = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddGuest}
-        />
+      />
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setGuestToDelete(null);
+        }}
+        onConfirm={() => {
+          handleDeleteGuest(guestToDelete?._id);
+          setIsDeleteModalOpen(false);
+        }}
+        guestName={guestToDelete ? `${guestToDelete.firstName} ${guestToDelete.lastName}` : ''}
+      />
     </div >
   );
 };

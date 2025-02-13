@@ -56,8 +56,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
     return size;
   }
 
-  console.log('Party Size', getTotalPartySize())
-
   const handleClose = () => {
     resetForm();
     onClose();
@@ -183,9 +181,8 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
         ...guestData,
         totalInParty,
         lastUpdated: new Date().toISOString(),
+        isDeleted: false,
     };
-
-    console.log('Guest Data', finalGuestData);
 
     onSubmit(finalGuestData);
     resetForm();
@@ -588,10 +585,10 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
       {/* Buttons */}
       <div className="sticky bottom-0 bg-[rgb(238, 238, 238)] px-6 py-4 border-t" style={{backgroundColor: 'rgb(238, 238, 238' }}>
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={handleClose} className="rounded-md bg-black px-12 py-2 text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ letterSpacing: '1px' }}>
+        <Button type="button" variant="outline" onClick={handleClose} className="rounded-md border border-black bg-white px-4 py-2 text-sm font-pop text-black shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ letterSpacing: '1px' }}>
           CANCEL
         </Button>
-        <Button type="submit" className="rounded-md bg-black px-12 py-2 text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ letterSpacing: '1px' }}>ADD GUEST</Button>
+        <Button type="submit" className="rounded-md border border-black bg-black px-4 py-2 text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ letterSpacing: '1px' }}>ADD GUEST</Button>
       </div>
       </div>
     </form>
