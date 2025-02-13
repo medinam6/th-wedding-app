@@ -26,7 +26,6 @@ const RSVPForm = () => {
                                                         placeholder="First and Last name"
                                                         className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6" />
                                                 </div>
-                                                <p className="mt-2 font-pop text-sm leading-3" style={{ fontSize: '10px' }}>Ex. Sarah Fortune (not The Fortune Family or Dr. and Mr. Fortune)</p>
                                             </div>
                                         </div>
                                     </div>
@@ -34,7 +33,7 @@ const RSVPForm = () => {
                                         <button
                                             type="submit"
                                             className="rounded-md bg-black px-12 py-2 text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                                        >
+                                            style={{ letterSpacing: '1px' }}>
                                             CONTINUE
                                         </button>
                                     </div>
