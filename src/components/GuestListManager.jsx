@@ -2,20 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Upload, Download, Edit, Trash2, UserPlus } from 'lucide-react';
+import { Upload, Download, Edit, Trash2, UserPlus, Check, X, Minus } from 'lucide-react';
 import AddGuestModal from './AddGuestModal';
+import EditGuestModal from './EditGuestModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { formatPhoneNumber } from './guestListUtility';
 
 const GuestListManager = () => {
   const [guests, setGuests] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingGuest, setEditingGuest] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [guestToDelete, setGuestToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [editingGuest, setEditingGuest] = useState(null);
 
   const fetchGuests = async () => {
     try {
@@ -53,15 +54,24 @@ const GuestListManager = () => {
 
   // Update existing guest
   const handleUpdateGuest = async (guestData) => {
+    console.log("Sending data to API:", guestData);
     try {
       const response = await fetch('/api/guestList', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(guestData)
+        body: JSON.stringify({
+          id: guestData._id,
+          ...guestData
+        })
       });
-      if (response.ok) {
-        fetchGuests(); // Refresh the list
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update guest');
       }
+
+      console.log("Guest updated successfully");
+      fetchGuests(); // Refresh the list
     } catch (error) {
       console.error('Error updating guest:', error);
     }
@@ -146,6 +156,29 @@ const GuestListManager = () => {
       </>
     );
   }
+
+
+  const getRSVPStatuses = (guest) => {
+    const statuses = [];
+
+    if (guest.rsvpStatus) {
+      statuses.push(guest.rsvpStatus);
+    }
+
+    if (guest.partner?.rsvpStatus) {
+      statuses.push(guest.partner.rsvpStatus);
+    }
+
+    if (Array.isArray(guest.children)) {
+      guest.children.forEach(child => {
+        if (child.rsvpStatus) {
+          statuses.push(child.rsvpStatus);
+        }
+      });
+    }
+
+    return statuses;
+  };
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -273,12 +306,26 @@ const GuestListManager = () => {
                       <td className="p-2 font-pop text-white">
                         {formatGuestAddressInTable(guest.address)}
                       </td>
-                      <td className="p-2 font-pop text-white">{guest.rsvpStatus || 'Pending'}</td>
+                      <td className="font-pop text-white text-center">
+                        <div className="flex flex-col items-center">
+                          {getRSVPStatuses(guest).map((status, index) => (
+                            <div key={index}>
+                              {status === "Attending" && <Check className="w-6 h-6 text-green-500" />}
+                              {status === "Declined" && <X className="w-6 h-6 text-red-500" />}
+                              {status === ("No Response" || "") && <Minus className="w-6 h-6 text-white" />}
+                            </div>
+                          ))}
+                        </div>
+                      </td>
                       <td className="p-2 font-pop text-white">{formatDate(guest.lastUpdated) || '-'}</td>
                       <td className="p-2 font-pop text-white">
                         <Button
                           size="sm"
-                          onClick={() => setEditingGuest(guest.id)}
+                          onClick={() => {
+                            const guestToEdit = guests.find(g => g._id === guest._id);
+                            setEditingGuest(guestToEdit);
+                            setIsEditModalOpen(true);
+                          }}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -304,6 +351,15 @@ const GuestListManager = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddGuest}
+      />
+      <EditGuestModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingGuest(null);
+        }}
+        onSubmit={handleUpdateGuest}
+        guest={editingGuest}
       />
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}

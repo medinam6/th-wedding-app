@@ -36,14 +36,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         case 'PUT':
             try {
-                const { id, ...updateData } = req.body;
+                const { id, _id, ...updateData } = req.body;
+                console.log('Request body:', req.body);
+                console.log('Update Data:', updateData);
+                console.log('ID:', id);
+
+                if (!id) {
+                    return res.status(400).json({ error: 'Missing ID parameter' });
+                }
+
                 const result = await collection.updateOne(
                     { _id: new ObjectId(id) },
                     { $set: updateData }
                 );
+
+                if (result.matchedCount === 0) {
+                    return res.status(404).json({ error: 'Guest not found' });
+                }
+
                 res.status(200).json(result);
             } catch (error) {
-                res.status(500).json({ error: 'Failed to update guest' });
+                console.error('Update error:', error);
+                res.status(500).json({ error: 'Failed to update guest: ' + error.message });
             }
             break;
 
