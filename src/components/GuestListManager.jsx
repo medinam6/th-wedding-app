@@ -241,7 +241,7 @@ const GuestListManager = () => {
 
     fetchGuestList();
   }, []);
-  
+
   return (
     <div className="space-y-8">
       <Card className="min-w-[1000px] w-full max-w-[1200px]">
@@ -324,7 +324,13 @@ const GuestListManager = () => {
                 </thead>
                 <tbody>
                   {sortedGuests.map(guest => (
-                    <tr key={guest.id} className="border-b border-gray-200">
+                    <tr key={guest.id}
+                      className="border-b border-gray-200 hover:bg-gray-700/50 cursor-pointer transition-colors group"
+                      onClick={() => {
+                        const guestToEdit = guests.find(g => g._id === guest._id);
+                        setEditingGuest(guestToEdit);
+                        setIsEditModalOpen(true);
+                      }}>
                       <td className="p-2 divide-white font-pop text-white">
                         {formatGuestNamesInTable(guest)}
                       </td>
@@ -345,9 +351,23 @@ const GuestListManager = () => {
                         <div className="flex flex-col items-center">
                           {getRSVPStatuses(guest).map((status, index) => (
                             <div key={index}>
-                              {status === "Attending" && <Check className="w-6 h-6 text-green-500" />}
-                              {status === "Declined" && <X className="w-6 h-6 text-red-500" />}
-                              {status === ("No Response" || "") && <Minus className="w-6 h-6 text-white" />}
+                              {/* Icon display - hidden on row hover */}
+                              <div className="group-hover:hidden">
+                                {status === "Attending" && <Check className="w-6 h-6 text-green-500" />}
+                                {status === "Declined" && <X className="w-6 h-6 text-red-500" />}
+                                {status === ("No Response" || "") && <Minus className="w-6 h-6 text-white" />}
+                              </div>
+
+                              {/* Text display - shown on row hover */}
+                              <div className="hidden group-hover:block min-w-[100px]">
+                                <span className={`
+                                  ${status === "Attending" ? "text-green-500" : ""}
+                                  ${status === "Declined" ? "text-red-500" : ""}
+                                  ${status === ("No Response" || "") ? "text-white" : ""}
+                                  `}>
+                                  {status}
+                                </span>
+                              </div>
                             </div>
                           ))}
                         </div>
