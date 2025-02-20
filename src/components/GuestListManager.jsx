@@ -376,7 +376,8 @@ const GuestListManager = () => {
                       <td className="p-2 font-pop text-white">
                         <Button
                           size="sm"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             const guestToEdit = guests.find(g => g._id === guest._id);
                             setEditingGuest(guestToEdit);
                             setIsEditModalOpen(true);
@@ -386,7 +387,8 @@ const GuestListManager = () => {
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setGuestToDelete(guest);
                             setIsDeleteModalOpen(true);
                           }}
