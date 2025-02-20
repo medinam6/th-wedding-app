@@ -10,55 +10,44 @@ if (!uri) {
 const options = {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    ssl: true,
-    tls: true,
-    tlsAllowInvalidCertificates: true, // For development only
-    maxPoolSize: 10, // Maximum number of connections in the pool
-    minPoolSize: 5,  // Minimum number of connections in the pool
-    maxIdleTimeMS: 60000, // How long a connection can be idle before being removed
-    connectTimeoutMS: 10000, // How long to wait for a connection to be established
+    maxPoolSize: 5, // Reduced for M0 tier
+    minPoolSize: 0, // Start with no minimum connections
+    maxIdleTimeMS: 30000, // Reduce idle time to 30 seconds
+    connectTimeoutMS: 5000,
+    family: 4 // Force IPv4
 };
-
-// In development, we might want different pool sizes
-// if (process.env.NODE_ENV === 'development') {
-//     options.maxPoolSize = 5;
-//     options.minPoolSize = 1;
-// }
 
 let client;
 let clientPromise;
 
-
-// In production, it's best to not use a global variable.
-client = new MongoClient(uri, options);
-clientPromise = client.connect()
-    .then(client => {
-        console.log('Successfully connected to MongoDB');
-        return client;
-    })
-    .catch(error => {
-        console.error('MongoDB connection error:', error);
-        throw error;
-    });
-
-
-// Add a function to gracefully close the connection
-export async function closeConnection() {
-    if (client) {
-        await client.close();
-        console.log('MongoDB connection closed');
+if (process.env.NODE_ENV === 'development') {
+    // In development, use a global variable so that the value
+    // is preserved across module reloads caused by HMR (Hot Module Replacement).
+    if (!global._mongoClientPromise) {
+        client = new MongoClient(uri, options);
+        global._mongoClientPromise = client.connect();
     }
+    clientPromise = global._mongoClientPromise;
+} else {
+    // In production, it's best to not use a global variable.
+    client = new MongoClient(uri, options);
+    clientPromise = client.connect();
 }
 
-// Add error handling for unexpected shutdowns
-process.on('SIGINT', async () => {
-    await closeConnection();
-    process.exit(0);
-});
+// Add connection error handling
+clientPromise.then(client => {
+    console.log('Successfully connected to MongoDB');
 
-process.on('SIGTERM', async () => {
-    await closeConnection();
-    process.exit(0);
+    // Add event listeners for connection pool monitoring
+    client.on('connectionPoolCreated', (event) => {
+        console.log('Connection pool created');
+    });
+
+    client.on('connectionPoolClosed', (event) => {
+        console.log('Connection pool closed');
+    });
+}).catch(error => {
+    console.error('MongoDB connection error:', error);
 });
 
 export default clientPromise;

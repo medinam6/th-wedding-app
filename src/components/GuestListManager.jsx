@@ -6,7 +6,14 @@ import { Upload, Download, Edit, Trash2, UserPlus, Check, X, Minus } from 'lucid
 import AddGuestModal from './AddGuestModal';
 import EditGuestModal from './EditGuestModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import { formatPhoneNumber } from './guestListUtility';
+import {
+  formatPhoneNumber,
+  formatGuestNamesInTable,
+  countRsvpStatuses,
+  sortGuestList
+} from './utils/guestListUtility';
+import exportGuestListToCSV from './utils/exportGuestList';
+import importGuests from './utils/importGuestList'
 
 const GuestListManager = () => {
   const [guests, setGuests] = useState([]);
@@ -15,8 +22,8 @@ const GuestListManager = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [guestToDelete, setGuestToDelete] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const fileInputRef = useRef(null);
 
   const fetchGuests = async () => {
     try {
@@ -30,7 +37,7 @@ const GuestListManager = () => {
       const data = await response.json();
       // Filter out soft-deleted guests
       const activeGuests = Array.isArray(data) ? data.filter(guest => !guest.isDeleted) : [];
-      setGuests(activeGuests);
+      setGuests(sortGuestList(activeGuests));
     } catch (error) {
       console.error('Detailed fetch error', error);
       setGuests([]);
@@ -99,41 +106,50 @@ const GuestListManager = () => {
     }
   };
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  function formatGuestNamesInTable(guest) {
-    const names = [];
+    try {
+      const result = await importGuests(file);
 
-    // Add guest's name
-    if (guest.firstName || guest.lastName) {
-      names.push(`${guest.title || ''} ${guest.firstName || ''} ${guest.lastName || ''} ${guest.suffix || ''}`.trim());
-    }
+      if (result.success) {
+        console.log(`Processing ${result.successfulRows} rows...`);
 
-    // Add partner's name if it exists
-    if (guest.partner?.firstName || guest.partner?.lastName) {
-      names.push(`${guest.partner.title || ''} ${guest.partner.firstName || ''} ${guest.partner.lastName || ''}`.trim());
-    }
+        let successCount = 0;
+        let failedGuests = [];
 
-    // Add children's names if they exist
-    if (Array.isArray(guest.children)) {
-      guest.children.forEach(child => {
-        if (child.firstName || child.lastName) {
-          names.push(`${child.firstName || ''} ${child.lastName || ''}`.trim());
+        for (const guest of result.guests) {
+          try {
+            await handleAddGuest(guest);
+            successCount++;
+          } catch (error) {
+            failedGuests.push({
+              name: `${guest.firstName} ${guest.lastName}`,
+              error: error.message
+            });
+            console.error('Error adding guest:', guest, error);
+          }
         }
-      });
-    }
 
-    // Return formatted names as JSX
-    return (
-      <>
-        {names.map((name, index) => (
-          <span key={index}>
-            {name}
-            <br />
-          </span>
-        ))}
-      </>
-    );
-  }
+        let message = `Import complete:\n${successCount} guests added successfully`;
+        if (failedGuests.length > 0) {
+          message += `\n${failedGuests.length} guests failed to add:`;
+          failedGuests.forEach(guest => {
+            message += `\n- ${guest.name}`;
+          });
+        }
+
+        alert(message);
+      } else {
+        alert(`Error importing guests: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error importing file:', error);
+      alert('There was an error importing the file. Please try again.');
+    }
+  };
+
 
   function formatGuestAddressInTable(address) {
     if (!address) {
@@ -157,7 +173,7 @@ const GuestListManager = () => {
     );
   }
 
-
+  // Need to move to utlity file
   const getRSVPStatuses = (guest) => {
     const statuses = [];
 
@@ -197,6 +213,8 @@ const GuestListManager = () => {
     `${guest.partner?.firstName || ''} ${guest.partner?.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const sortedGuests = sortGuestList(filteredGuests);
+
   const totalGuests = guests.reduce((sum, guest) => sum + guest.totalInParty, 0);
 
   // Fetch guest list on component mount
@@ -223,21 +241,37 @@ const GuestListManager = () => {
 
     fetchGuestList();
   }, []);
-  console.log('Guests', guests);
+  
   return (
     <div className="space-y-8">
-      <Card>
+      <Card className="min-w-[1000px] w-full max-w-[1200px]">
         <CardHeader className="items-center justify-between">
-          <CardTitle className="font-pop text-white">Guest List Management</CardTitle>
+          <CardTitle className="font-pop text-3xl text-white">Guest List Management</CardTitle>
           <div className="flex gap-4">
+            <>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <Button
+                className="text-white"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2 text-white font-pop" />
+                Upload CSV
+              </Button>
+            </>
             <Button
               className="text-white"
-              onClick={() => document.getElementById('fileInput')?.click()}
-            >
-              <Upload className="w-4 h-4 mr-2 text-white font-pop" />
-              Upload CSV
-            </Button>
-            <Button onClick={''} className="text-white">
+              onClick={() => {
+                const downloadSuccessful = exportGuestListToCSV(sortedGuests);
+                if (!downloadSuccessful) {
+                  alert('There was an error exporting the guest list. Please try again.');
+                }
+              }} >
               <Download className="w-4 h-4 mr-2 text-white font-pop" />
               Export CSV
             </Button>
@@ -261,20 +295,21 @@ const GuestListManager = () => {
               </Button>
             </div>
           </div>
-
-          {/* {fileName && (
-              <p className="text-sm text-gray-500 font-pop text-white">Selected file: {fileName}</p>
-            )} */}
           <br />
           {guests.length === 0 ? (
             <div className="text-center py-8 text-white font-pop">
               <p>No guest list uploaded yet.</p>
-              <p className="text-sm mt-2">Upload a CSV file to get started.</p>
+              <p className="text-sm mt-2">Add a Guest or Upload a CSV file to get started.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <p className="font-pop text-white">Guest List Loaded: {totalGuests} Guests | {guests.length} Groups</p>
-              <br />
+              <div className="flex justify-between items-center w-full">
+                <p className="font-pop text-white">
+                  Guest List: {totalGuests} Guests | {guests.length} Groups
+                </p>
+                <div className="text-right">{countRsvpStatuses(guests)}</div>
+              </div>
+              <br></br>
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
@@ -288,7 +323,7 @@ const GuestListManager = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredGuests.map(guest => (
+                  {sortedGuests.map(guest => (
                     <tr key={guest.id} className="border-b border-gray-200">
                       <td className="p-2 divide-white font-pop text-white">
                         {formatGuestNamesInTable(guest)}

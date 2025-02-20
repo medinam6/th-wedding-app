@@ -1,17 +1,21 @@
 export const formatPhoneNumber = (value) => {
-  // Remove all non-numeric characters
-  const phoneNumber = value.replace(/\D/g, '');
+  if (!value) return ''; // Handle empty input gracefully
 
-  // Format the number
+  // Remove all non-numeric characters
+  console.log('Value', value);
+  const phoneNumber = String(value).replace(/\D/g, '');
+
+  // Format the number based on length
   if (phoneNumber.length <= 3) {
     return phoneNumber;
   } else if (phoneNumber.length <= 6) {
     return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
   } else if (phoneNumber.length <= 10) {
     return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+  } else {
+    // If it's longer than 10 digits, format it as an international number
+    return `+${phoneNumber[0]} (${phoneNumber.slice(1, 4)}) ${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`;
   }
-  // Limit to 10 digits
-  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
 };
 
 export const getTotalPartySize = (guestData) => {
@@ -22,6 +26,197 @@ export const getTotalPartySize = (guestData) => {
   }
   return size;
 }
+
+export const countRsvpStatuses = (allGuests) => {
+  const rsvpCounts = {
+    attending: 0,
+    declined: 0,
+    noResponse: 0
+  };
+
+  allGuests.forEach(guest => {
+    // Count primary guest's RSVP status
+    if (guest.rsvpStatus === "Attending") {
+      rsvpCounts.attending++;
+    } else if (guest.rsvpStatus === "Declined") {
+      rsvpCounts.declined++;
+    } else {
+      rsvpCounts.noResponse++;
+    }
+
+    // Count partner's RSVP status (if they exist)
+    if (guest.partner && guest.partner.rsvpStatus) {
+      if (guest.partner.rsvpStatus === "Attending") {
+        rsvpCounts.attending++;
+      } else if (guest.partner.rsvpStatus === "Declined") {
+        rsvpCounts.declined++;
+      } else {
+        rsvpCounts.noResponse++;
+      }
+    }
+
+    // Count children's RSVP statuses (if they exist)
+    if (guest.children && Array.isArray(guest.children)) {
+      guest.children.forEach(child => {
+        if (child.rsvpStatus === "Attending") {
+          rsvpCounts.attending++;
+        } else if (child.rsvpStatus === "Declined") {
+          rsvpCounts.declined++;
+        } else {
+          rsvpCounts.noResponse++;
+        }
+      });
+    }
+  });
+
+  // If all guests have not responded, return null
+  if (rsvpCounts.attending === 0 && rsvpCounts.declined === 0) {
+    return null;
+  }
+
+  function pluralize(count, status) {
+    if (status === 'No Response') {
+      if (count === 1) {
+        return "Has Not Responded"
+      } else {
+        return "Have Not Responded"
+      }
+    } else {
+      if (count === 1) {
+        return 'Guest'
+      } else {
+        return 'Guests'
+      }
+    }
+  }
+
+  return (
+    <p>
+      {<><span className="font-pop text-xl text-green-500">{rsvpCounts.attending} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.attending, 'Attending')} Attending  &nbsp;&nbsp;</span></>}
+      {<><span className="font-pop text-xl text-red-500">{rsvpCounts.declined} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.declined, 'Declined')} Declined  &nbsp;&nbsp;</span></>}
+      {rsvpCounts.noResponse > 0 && <><span className="font-pop text-xl text-white">{rsvpCounts.noResponse} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.noResponse, 'No Response')}  &nbsp;&nbsp;</span></>}
+    </p>
+  );
+}
+
+export const weddingDetails = () => {
+  const startTime = 'Saturday, Month, XX, XXXX 7:00 PM';
+  const endTime = 'Sunday, Month, XX, XXXX 12:00 AM';
+  const weddingAddress = '123 South Main Street, Las Vegas, Nevada 89XXX';
+  const dressCode = 'Semi-Formal: Tuxes and gowns are welcome, and so are suits and cocktail dresses.';
+  const additionalInfo = 'Pre-Ceremony Cocktails being at 6:30 PM, Ceremony will begin at 7:00 PM';
+
+  return (
+    <>
+      <div className="text-center relative px-16 pt-6 pb-6 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
+        style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
+        <h3 className='text-xl text-black font-bodo mb-4'>Wedding Details</h3>
+        <p className='font-pop text-black text-sm mt-2'>{startTime} - {endTime}</p>
+        <p className='font-pop text-black text-sm mt-2'>{weddingAddress}</p>
+        <p className='font-pop text-black text-sm mt-2'>{dressCode}</p>
+        <p className='font-pop text-black text-sm mt-2'>{additionalInfo}</p>
+      </div >
+    </>
+  )
+}
+
+export const sortGuestList = (guests) => {
+  return [...guests].sort((a, b) => {
+    // First compare last names
+    const lastNameComparison = a.lastName.localeCompare(b.lastName);
+
+    // If last names are the same, compare first names
+    if (lastNameComparison === 0) {
+      return a.firstName.localeCompare(b.firstName);
+    }
+
+    return lastNameComparison;
+  });
+};
+
+export const extractGuestsIntoArray = (guestData) => {
+  const guests = [
+    {
+      firstName: guestData.firstName,
+      lastName: guestData.lastName,
+      rsvpStatus: guestData.rsvpStatus
+    }
+  ]
+  if (guestData.partner) {
+    guests.push({
+      firstName: guestData.partner.firstName,
+      lastName: guestData.partner.lastName,
+      rsvpStatus: guestData.partner.rsvpStatus
+    })
+  }
+  if (guestData.children?.length) {
+    guestData.children.forEach(child => {
+      guests.push({
+        firstName: child.firstName,
+        lastName: child.lastName,
+        rsvpStatus: child.rsvpStatus
+      })
+    })
+  }
+  return guests;
+}
+
+export const reconstructGuestData = (originalGuestData, updatedGuestArray) => {
+  const updatedGuestData = { ...originalGuestData };
+
+  // Update main guest
+  updatedGuestData.rsvpStatus = updatedGuestArray[0].rsvpStatus;
+
+  // Update partner if exists
+  if (updatedGuestData.partner) {
+    updatedGuestData.partner.rsvpStatus = updatedGuestArray[1]?.rsvpStatus;
+  }
+
+  // Update children if exist
+  if (updatedGuestData.children?.length) {
+    updatedGuestData.children = updatedGuestData.children.map((child, index) => ({
+      ...child,
+      rsvpStatus: updatedGuestArray[index + (updatedGuestData.partner ? 2 : 1)]?.rsvpStatus
+    }));
+  }
+
+  return updatedGuestData;
+};
+
+export function formatGuestNamesInTable(guest) {
+  const names = [];
+
+  // Add guest's name
+  if (guest.firstName || guest.lastName) {
+    names.push(`${guest.title || ''} ${guest.firstName || ''} ${guest.lastName || ''} ${guest.suffix || ''}`.trim());
+  }
+
+  // Add partner's name if it exists
+  if (guest.partner?.firstName || guest.partner?.lastName) {
+    names.push(`${guest.partner.title || ''} ${guest.partner.firstName || ''} ${guest.partner.lastName || ''}`.trim());
+  }
+
+  // Add children's names if they exist
+  if (Array.isArray(guest?.children)) {
+    guest.children.forEach(child => {
+      if (child.firstName || child.lastName) {
+        names.push(`${child.firstName || ''} ${child.lastName || ''}`.trim());
+      }
+    });
+  }
+
+  // Return formatted names as JSX
+  return names.length > 0 ? (
+    <>
+      {names.map((name, index) => (
+        <span key={index}>
+          {name}
+          <br />
+        </span>
+      ))}
+    </>
+  ) : <span>No Name Available</span>;
+};
 
 export const titleOptions = [
   { value: "", label: "Select" },

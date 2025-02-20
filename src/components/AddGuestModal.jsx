@@ -13,7 +13,7 @@ import {
   countryOptions,
   formatPhoneNumber,
   getTotalPartySize
-} from './guestListUtility';
+} from './utils/guestListUtility';
 
 const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
   const [guestData, setGuestData] = useState({

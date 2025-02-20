@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Tabs,
     TabsContent,
@@ -21,8 +20,10 @@ import {
     countryOptions,
     formatPhoneNumber,
     rsvpStatuses,
-    getTotalPartySize
-} from './guestListUtility';
+    getTotalPartySize,
+    extractGuestsIntoArray,
+    reconstructGuestData
+} from './utils/guestListUtility';
 
 const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
     const [guestData, setGuestData] = useState({
@@ -34,6 +35,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
         partner: null,
         rsvpStatus: 'No Response',
         children: [],
+        diet: '',
+        song: '',
         email: '',
         phoneNumber: '',
         address: {
@@ -159,63 +162,12 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
         handleInputChange('phoneNumber', formattedNumber);
     };
 
-    const extractGuestsIntoArray = (guestData) => {
-        const guests = [
-            {
-                firstName: guestData.firstName,
-                lastName: guestData.lastName,
-                rsvpStatus: guestData.rsvpStatus
-            }
-        ]
-        if (guestData.partner) {
-            guests.push({
-                firstName: guestData.partner.firstName,
-                lastName: guestData.partner.lastName,
-                rsvpStatus: guestData.partner.rsvpStatus
-            })
-        }
-        if (guestData.children?.length) {
-            guestData.children.forEach(child => {
-                guests.push({
-                    firstName: child.firstName,
-                    lastName: child.lastName,
-                    rsvpStatus: child.rsvpStatus
-                })
-            })
-        }
-        return guests;
-    }
-
-    console.log('Guest Array', guestArray);
-
     const handleRSVPChange = (index, value) => {
         setGuestArray((prevGuests) =>
             prevGuests.map((guest, i) =>
                 i === index ? { ...guest, rsvpStatus: value } : guest
             )
         );
-    };
-
-    const reconstructGuestData = (originalGuestData, updatedGuestArray) => {
-        const updatedGuestData = { ...originalGuestData };
-
-        // Update main guest
-        updatedGuestData.rsvpStatus = updatedGuestArray[0].rsvpStatus;
-
-        // Update partner if exists
-        if (updatedGuestData.partner) {
-            updatedGuestData.partner.rsvpStatus = updatedGuestArray[1]?.rsvpStatus;
-        }
-
-        // Update children if exist
-        if (updatedGuestData.children?.length) {
-            updatedGuestData.children = updatedGuestData.children.map((child, index) => ({
-                ...child,
-                rsvpStatus: updatedGuestArray[index + (updatedGuestData.partner ? 2 : 1)]?.rsvpStatus
-            }));
-        }
-
-        return updatedGuestData;
     };
 
     const handleSubmit = (e) => {
@@ -231,6 +183,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
         onSubmit(updatedData);
         onClose();
     };
+
+    console.log('Guest Data', guestData);
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -645,10 +599,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     </label>
                                     <Input
                                         value={guestData.diet}
-                                        onChange={(e) => handleInputChange('diet', {
-                                            ...guestData.diet,
-                                            diet: e.target.value
-                                        })}
+                                        onChange={(e) => handleInputChange('diet', e.target.value)}
                                         className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
                                     />
                                 </div>
@@ -662,10 +613,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     </label>
                                     <Input
                                         value={guestData.song}
-                                        onChange={(e) => handleInputChange('song', {
-                                            ...guestData.song,
-                                            ShoppingBagIcon: e.target.value
-                                        })}
+                                        onChange={(e) => handleInputChange('song', e.target.value)}
                                         className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
                                     />
                                 </div>
