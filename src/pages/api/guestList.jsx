@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
     const client = await clientPromise;
     const db = client.db('th-wedding');
     const collection = db.collection('guestList');
@@ -79,7 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const { id } = req.query;
                 const result = await collection.deleteOne({
-                    _id: new ObjectId(id as string)
+                    _id: new ObjectId(id)
                 });
                 res.status(200).json(result);
             } catch (error) {
