@@ -2,7 +2,6 @@ export const formatPhoneNumber = (value) => {
   if (!value) return ''; // Handle empty input gracefully
 
   // Remove all non-numeric characters
-  console.log('Value', value);
   const phoneNumber = String(value).replace(/\D/g, '');
 
   // Format the number based on length
@@ -27,7 +26,7 @@ export const getTotalPartySize = (guestData) => {
   return size;
 }
 
-export const countRsvpStatuses = (allGuests) => {
+export const countRsvpStatuses = (allGuests, isMobileView) => {
   const rsvpCounts = {
     attending: 0,
     declined: 0,
@@ -90,13 +89,24 @@ export const countRsvpStatuses = (allGuests) => {
     }
   }
 
-  return (
-    <p>
-      {<><span className="font-pop text-xl text-green-500">{rsvpCounts.attending} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.attending, 'Attending')} Attending  &nbsp;&nbsp;</span></>}
-      {<><span className="font-pop text-xl text-red-500">{rsvpCounts.declined} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.declined, 'Declined')} Declined  &nbsp;&nbsp;</span></>}
-      {rsvpCounts.noResponse > 0 && <><span className="font-pop text-xl text-white">{rsvpCounts.noResponse} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.noResponse, 'No Response')}  &nbsp;&nbsp;</span></>}
-    </p>
-  );
+  if (isMobileView) {
+    return (
+      <p>
+        {<><p className="font-pop text-green-500">{rsvpCounts.attending} <span className="font-pop text-xs text-white">Attending</span></p></>}
+        {<><p className="font-pop text-red-500">{rsvpCounts.declined} <span className="font-pop text-xs text-white">Declined</span></p></>}
+        {rsvpCounts.noResponse > 0 && <><p className="font-pop text-white">{rsvpCounts.declined} <span className="font-pop text-xs text-white">No Response</span></p></>}
+      </p>
+    );
+  } else {
+
+    return (
+      <p>
+        {<><span className="font-pop text-xl text-green-500">{rsvpCounts.attending} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.attending, 'Attending')} Attending  &nbsp;&nbsp;</span></>}
+        {<><span className="font-pop text-xl text-red-500">{rsvpCounts.declined} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.declined, 'Declined')} Declined  &nbsp;&nbsp;</span></>}
+        {rsvpCounts.noResponse > 0 && <><span className="font-pop text-xl text-white">{rsvpCounts.noResponse} </span><span className="font-pop text-xs text-white">{pluralize(rsvpCounts.noResponse, 'No Response')}  &nbsp;&nbsp;</span></>}
+      </p>
+    );
+  }
 }
 
 export const weddingDetails = () => {
@@ -139,14 +149,16 @@ export const extractGuestsIntoArray = (guestData) => {
     {
       firstName: guestData.firstName,
       lastName: guestData.lastName,
-      rsvpStatus: guestData.rsvpStatus
+      rsvpStatus: guestData.rsvpStatus,
+      entree: guestData.entree,
     }
   ]
   if (guestData.partner) {
     guests.push({
       firstName: guestData.partner.firstName,
       lastName: guestData.partner.lastName,
-      rsvpStatus: guestData.partner.rsvpStatus
+      rsvpStatus: guestData.partner.rsvpStatus,
+      entree: guestData.partner.entree,
     })
   }
   if (guestData.children?.length) {
@@ -154,7 +166,8 @@ export const extractGuestsIntoArray = (guestData) => {
       guests.push({
         firstName: child.firstName,
         lastName: child.lastName,
-        rsvpStatus: child.rsvpStatus
+        rsvpStatus: child.rsvpStatus,
+        entree: child.entree,
       })
     })
   }
@@ -166,17 +179,20 @@ export const reconstructGuestData = (originalGuestData, updatedGuestArray) => {
 
   // Update main guest
   updatedGuestData.rsvpStatus = updatedGuestArray[0].rsvpStatus;
+  updatedGuestData.entree = updatedGuestArray[0].entree;
 
   // Update partner if exists
   if (updatedGuestData.partner) {
     updatedGuestData.partner.rsvpStatus = updatedGuestArray[1]?.rsvpStatus;
+    updatedGuestData.partner.entree = updatedGuestArray[1]?.entree;
   }
 
   // Update children if exist
   if (updatedGuestData.children?.length) {
     updatedGuestData.children = updatedGuestData.children.map((child, index) => ({
       ...child,
-      rsvpStatus: updatedGuestArray[index + (updatedGuestData.partner ? 2 : 1)]?.rsvpStatus
+      rsvpStatus: updatedGuestArray[index + (updatedGuestData.partner ? 2 : 1)]?.rsvpStatus,
+      entree: updatedGuestArray[index + (updatedGuestData.partner ? 2 : 1)]?.entree,
     }));
   }
 
@@ -229,9 +245,16 @@ export const titleOptions = [
 
 export const rsvpStatuses = [
   { value: "No Response", label: "No Response" },
-  { value: "Attending", label: "Attending" },
-  { value: "Declined", label: "Declined" }
-]
+  { value: "Attending", label: "Attending", color: "text-green-500" },
+  { value: "Declined", label: "Declined", color: "text-red-500" }
+];
+
+export const getRsvpStyling = (status) => {
+  const statusOption = rsvpStatuses.find(option => option.value === status);
+  return {
+    textColor: statusOption?.color || "text-black",
+  };
+};
 
 export const stateOptions = [
   { value: "", label: "Select..." },

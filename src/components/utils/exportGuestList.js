@@ -9,12 +9,14 @@ export const exportGuestListToCSV = (guests) => {
             'Last Name': guest.lastName || '',
             'Suffix': guest.suffix || '' || '',
             'RSVP Status': guest.rsvpStatus || '',
+            'Entree': guest.entree || '',
             // Partner
             'Partner Title': guest.partner?.title || '',
             'Partner First Name': guest.partner?.firstName || '',
             'Partner Last Name': guest.partner?.lastName || '',
             'Partner Suffix': guest.partner?.suffix || '',
             'Partner RSVP': guest.partner?.rsvpStatus || '',
+            'Partner Entree': guest.partner?.entree || '',
             // Contact
             'Email': guest.email || '',
             'Phone Number': guest.phoneNumber || '',
@@ -26,8 +28,7 @@ export const exportGuestListToCSV = (guests) => {
             'Country': guest.address.country || '',
             // Child
             'Children': guest.children ? guest.children.map(child =>
-                `${child.firstName} ${child.lastName} (${child.rsvpStatus})`).join('; ') : '',
-            'Diet Restrictions': guest.diet || '',
+                `${child.firstName} ${child.lastName} (${child.rsvpStatus} - ${child.entree})`).join('; ') : '',
             'Song Request': guest.song || '',
         }));
 

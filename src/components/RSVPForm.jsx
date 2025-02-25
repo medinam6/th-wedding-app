@@ -117,8 +117,22 @@ const RSVPForm = () => {
 
     const handleRSVPChange = (index, value) => {
         setGuestArray((prevGuests) =>
+            prevGuests.map((guest, i) => {
+                if (i === index) {
+                    if (value === "Declined") {
+                        return { ...guest, rsvpStatus: value, entree: '' };
+                    }
+                    return { ...guest, rsvpStatus: value };
+                }
+                return guest;
+            })
+        );
+    };
+
+    const handleEntreeChange = (index, value) => {
+        setGuestArray((prevGuests) =>
             prevGuests.map((guest, i) =>
-                i === index ? { ...guest, rsvpStatus: value } : guest
+                i === index ? { ...guest, entree: value } : guest
             )
         );
     };
@@ -230,15 +244,14 @@ const RSVPForm = () => {
                 <hr style={{ borderTop: '1px solid gray' }}></hr>
                 <div className="space-y-4">
                     {guestArray.map((guest, index) => (
-                        <div className="flex justify-between items-center pb-4 pt-4">
-                            <React.Fragment key={index}>
-
+                        <div key={index} className="pb-4 pt-4">
+                            <div className="flex justify-between items-center">
                                 {/* Guest Name */}
                                 <div className="pt-4">
                                     <span className="font-pop text-white">{guest.firstName} {guest.lastName} </span><span className="text-red-500">*</span>
                                 </div>
 
-                                {/* Radio Buttons */}
+                                {/* Radio Buttons for RSVP */}
                                 <div className="pt-4 flex items-center gap-4">
                                     <label className="flex items-center space-x-2 text-white">
                                         <input
@@ -266,12 +279,63 @@ const RSVPForm = () => {
                                         <span className="font-pop text-white">Will Not Attend</span>
                                     </label>
                                 </div>
-                            </React.Fragment>
+                            </div>
 
+                            {/* Entrée Selection - Only show if attending */}
+                            {guest.rsvpStatus === "Attending" && (
+                                <div className="mt-4">
+                                    <p className="font-pop text-white text-center"
+                                        style={{
+                                            lineHeight: '2.25em',
+                                            letterSpacing: '1px'
+                                        }}>
+                                        Please indicate your choice of Entrée:<span className="text-red-500"> *</span>
+                                    </p>
+                                    <div className="flex justify-center gap-16 mt-2">
+                                        <label className="flex items-center space-x-2 text-white">
+                                            <input
+                                                type="radio"
+                                                name={`entree-${index}`}
+                                                value="Beef"
+                                                required
+                                                checked={guest.entree === "Beef"}
+                                                onChange={(e) => handleEntreeChange(index, e.target.value)}
+                                                className="h-4 w-4 accent-black hover:accent-gray-500"
+                                            />
+                                            <span className="font-pop text-white">Beef</span>
+                                        </label>
+
+                                        <label className="flex items-center space-x-2 text-white">
+                                            <input
+                                                type="radio"
+                                                name={`entree-${index}`}
+                                                value="Fish"
+                                                required
+                                                checked={guest.entree === "Fish"}
+                                                onChange={(e) => handleEntreeChange(index, e.target.value)}
+                                                className="h-4 w-4 accent-black hover:accent-gray-500"
+                                            />
+                                            <span className="font-pop text-white">Fish</span>
+                                        </label>
+
+                                        <label className="flex items-center space-x-2 text-white">
+                                            <input
+                                                type="radio"
+                                                name={`entree-${index}`}
+                                                value="Vegetarian"
+                                                required
+                                                checked={guest.entree === "Vegetarian"}
+                                                onChange={(e) => handleEntreeChange(index, e.target.value)}
+                                                className="h-4 w-4 accent-black hover:accent-gray-500"
+                                            />
+                                            <span className="font-pop text-white">Vegetarian</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
+                            <hr className="mt-4" style={{ borderTop: '1px solid gray' }}></hr>
                         </div>
                     ))}
-                    <hr style={{ borderTop: '1px solid gray' }}></hr>
-
                 </div>
                 <div className="flex-col mt-0 justify-center overflow-hidden py-5 sm:py-12">
                     <div className="relative px-16 pt-10 pb-16 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
@@ -281,21 +345,7 @@ const RSVPForm = () => {
                                 <div className="py-4 max-w-lg mx-auto text-black font-pop text-lg text-center">
                                     <h2>The couple would like to know...</h2>
                                 </div>
-                                <div className="col-span-12 py-5 pb-5">
-                                    <label className="block text-sm font-pop text-black"
-                                        style={{
-                                            lineHeight: '2.25em',
-                                            letterSpacing: '1px'
-                                        }}>
-                                        Are there any dietary restrictions that we should know of? (Optional)
-                                    </label>
-                                    <Input
-                                        value={selectedPartyData?.diet || ''}
-                                        onChange={(e) => handleInputChange('diet', e.target.value)}
-                                        className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                                    />
-                                </div>
-                                <div className="col-span-12">
+                                <div className="col-span-12 pt-4">
                                     <label className="block text-sm font-pop text-black"
                                         style={{
                                             lineHeight: '2.25em',
@@ -324,7 +374,6 @@ const RSVPForm = () => {
                 </div>
             </form >
         </div >
-
     );
 
     const renderConfirmation = () => (

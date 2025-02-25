@@ -20,6 +20,7 @@ import {
     countryOptions,
     formatPhoneNumber,
     rsvpStatuses,
+    getRsvpStyling,
     getTotalPartySize,
     extractGuestsIntoArray,
     reconstructGuestData
@@ -116,7 +117,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                 firstName: '',
                 lastName: '',
                 suffix: '',
-                rsvpStatus: 'No Response'
+                rsvpStatus: 'No Response',
+                diet: '',
             }
         }));
     };
@@ -133,7 +135,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                         firstName: '',
                         lastName: '',
                         suffix: '',
-                        rsvpStatus: 'No Response'
+                        rsvpStatus: 'No Response',
+                        diet: '',
                     }
                 ]
             }));
@@ -164,8 +167,22 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
     const handleRSVPChange = (index, value) => {
         setGuestArray((prevGuests) =>
+            prevGuests.map((guest, i) => {
+                if (i === index) {
+                    if (value !== 'Attending') {
+                        return { ...guest, rsvpStatus: value, entree: '' };
+                    }
+                    return { ...guest, rsvpStatus: value };
+                }
+                return guest;
+            })
+        );
+    };
+
+    const handleEntreeChange = (index, value) => {
+        setGuestArray((prevGuests) =>
             prevGuests.map((guest, i) =>
-                i === index ? { ...guest, rsvpStatus: value } : guest
+                i === index ? { ...guest, entree: value } : guest
             )
         );
     };
@@ -184,42 +201,45 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
         onClose();
     };
 
-    console.log('Guest Data', guestData);
-
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent
-                className="sm:max-w-2xl rounded-lg fixed left-0 right-0 top-[70px] mx-auto transform-none"
+                className="sm:max-w-2xl rounded-lg mx-auto transform-none w-full max-h-[90vh] overflow-y-auto"
                 style={{
                     backgroundColor: 'rgb(238, 238, 238)',
-                    padding: '1.5rem'
+                    padding: '1.5rem',
+                    position: 'fixed',
+                    left: '0',
+                    right: '0',
+                    top: '5vh',
+                    bottom: 'auto'
                 }}
             >
                 <DialogHeader>
-                    <DialogTitle className="font-pop text-black">Edit Guest Details</DialogTitle>
+                    <DialogTitle className="font-pop text-black text-center sm:text-left">Edit Guest Details</DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit}>
                     <Tabs defaultValue="guest-info" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="guest-info">Guest Info</TabsTrigger>
-                            <TabsTrigger value="contact-info">Contact Info</TabsTrigger>
-                            <TabsTrigger value="rsvp-status">RSVP Status</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-3 mb-4">
+                            <TabsTrigger value="guest-info" className="text-xs sm:text-sm">Guest Info</TabsTrigger>
+                            <TabsTrigger value="contact-info" className="text-xs sm:text-sm">Contact Info</TabsTrigger>
+                            <TabsTrigger value="rsvp-status" className="text-xs sm:text-sm">RSVP Status</TabsTrigger>
                         </TabsList>
-                        <br></br>
                         <hr style={{ borderTop: '1px solid gray', paddingBottom: '1px', paddingTop: '3px' }}></hr>
+
                         {/* Guest Info Tab */}
                         <TabsContent value="guest-info" className="space-y-4">
                             {/* Primary Guest */}
-                            <div className="grid grid-cols-12 gap-4">
+                            <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4">
                                 {/* Title */}
                                 <div className="col-span-2" style={{ paddingLeft: '4px' }}>
-                                    <label className="block text-sm font-pop text-black"
+                                    <label className="block text-xs sm:text-sm font-pop text-black"
                                         style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>TITLE</label>
                                     <select
                                         value={guestData.title}
                                         onChange={(e) => handleInputChange('title', e.target.value)}
-                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
+                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
                                         style={{ paddingBottom: '11px' }}
                                     >
                                         {titleOptions.map(option => (
@@ -232,7 +252,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
                                 {/* First Name */}
                                 <div className="col-span-4">
-                                    <label className="block text-sm font-pop text-black"
+                                    <label className="block text-xs sm:text-sm font-pop text-black"
                                         style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>
                                         FIRST NAME <span className="text-red-500">*</span>
                                     </label>
@@ -247,8 +267,38 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     />
                                 </div>
 
-                                {/* Last Name */}
-                                <div className="col-span-4">
+                                {/* Last Name and Suffix groups for mobile - rearranged layout */}
+                                <div className="col-span-6 sm:hidden grid grid-cols-6 gap-2">
+                                    <div className="col-span-4">
+                                        <label className="block text-xs font-pop text-black"
+                                            style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>
+                                            LAST NAME <span className="text-red-500">*</span>
+                                        </label>
+                                        <Input
+                                            id="lastName"
+                                            name="lastName"
+                                            value={guestData.lastName}
+                                            onChange={(e) => handleInputChange('lastName', e.target.value)}
+                                            required
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                            placeholder="Last Name"
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className="block text-xs font-pop text-black"
+                                            style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>SUFFIX</label>
+                                        <Input
+                                            id="suffix"
+                                            name="suffix"
+                                            value={guestData.suffix}
+                                            onChange={(e) => handleInputChange('suffix', e.target.value)}
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Desktop layout for Last Name */}
+                                <div className="hidden sm:block col-span-4">
                                     <label className="block text-sm font-pop text-black"
                                         style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>
                                         LAST NAME <span className="text-red-500">*</span>
@@ -264,8 +314,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     />
                                 </div>
 
-                                {/* Suffix */}
-                                <div className="col-span-2" style={{ paddingRight: '28px' }}>
+                                {/* Desktop layout for Suffix */}
+                                <div className="hidden sm:block col-span-2" style={{ paddingRight: '28px' }}>
                                     <label className="block text-sm font-pop text-black"
                                         style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>SUFFIX</label>
                                     <Input
@@ -283,7 +333,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                 <Button
                                     type="button"
                                     variant="link"
-                                    className="text-black font-small underline hover:no-underline flex items-center gap-1"
+                                    className="text-black text-xs sm:text-sm font-small underline hover:no-underline flex items-center gap-1"
                                     onClick={handleAddPartner}
                                     style={{ marginTop: '0em', paddingLeft: '8px' }}
                                 >
@@ -293,13 +343,13 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
                             {/* Partner Fields */}
                             {showPartner && (
-                                <div className="grid grid-cols-12 gap-4">
+                                <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4">
                                     {/* Partner Title */}
                                     <div className="col-span-2" style={{ paddingLeft: '4px' }}>
                                         <select
                                             value={guestData.partner?.title || ''}
                                             onChange={(e) => handlePartnerInputChange('title', e.target.value)}
-                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
                                             style={{ paddingBottom: '11px' }}
                                         >
                                             {titleOptions.map(option => (
@@ -322,8 +372,39 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                         />
                                     </div>
 
-                                    {/* Partner Last Name */}
-                                    <div className="col-span-4">
+                                    {/* Partner Last Name and Suffix - Mobile layout */}
+                                    <div className="col-span-6 sm:hidden grid grid-cols-6 gap-2">
+                                        <div className="col-span-4">
+                                            <Input
+                                                id="partnerLastName"
+                                                required
+                                                value={guestData.partner?.lastName || ''}
+                                                onChange={(e) => handlePartnerInputChange('lastName', e.target.value)}
+                                                className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                                placeholder="Last Name"
+                                            />
+                                        </div>
+                                        <div className="col-span-2 flex">
+                                            <Input
+                                                id="partnerSuffix"
+                                                value={guestData.partner?.suffix || ''}
+                                                onChange={(e) => handlePartnerInputChange('suffix', e.target.value)}
+                                                className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                                placeholder="Suffix"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={handleRemovePartner}
+                                                className="ml-1 flex-shrink-0 text-black"
+                                                style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '4px' }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Partner Last Name - Desktop */}
+                                    <div className="hidden sm:block col-span-4">
                                         <Input
                                             id="partnerLastName"
                                             required
@@ -334,8 +415,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                         />
                                     </div>
 
-                                    {/* Partner Suffix and Remove Button */}
-                                    <div className="col-span-2 flex items-center">
+                                    {/* Partner Suffix and Remove Button - Desktop */}
+                                    <div className="hidden sm:flex col-span-2 items-center">
                                         <div className="w-full">
                                             <Input
                                                 id="partnerSuffix"
@@ -361,7 +442,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                 <Button
                                     type="button"
                                     variant="link"
-                                    className="text-black font-small underline hover:no-underline flex items-center gap-1"
+                                    className="text-black text-xs sm:text-sm font-small underline hover:no-underline flex items-center gap-1"
                                     onClick={handleAddChild}
                                     style={{ marginTop: '0em', paddingLeft: '8px' }}
                                 >
@@ -371,13 +452,13 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
                             {/* Additional Guests Fields */}
                             {guestData.children?.map((child, index) => (
-                                <div key={index} className="grid grid-cols-12 gap-4">
+                                <div key={index} className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4">
                                     {/* Child Title */}
                                     <div className="col-span-2" style={{ paddingLeft: '4px' }}>
                                         <select
                                             value={child.title}
                                             onChange={(e) => handleChildInputChange(index, 'title', e.target.value)}
-                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
                                             style={{ paddingBottom: '11px' }}
                                         >
                                             {titleOptions.map(option => (
@@ -399,8 +480,37 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                         />
                                     </div>
 
-                                    {/* Child Last Name */}
-                                    <div className="col-span-4">
+                                    {/* Child Last Name and Suffix - Mobile */}
+                                    <div className="col-span-6 sm:hidden grid grid-cols-6 gap-2">
+                                        <div className="col-span-4">
+                                            <Input
+                                                required
+                                                value={child.lastName}
+                                                onChange={(e) => handleChildInputChange(index, 'lastName', e.target.value)}
+                                                className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                                placeholder="Last Name"
+                                            />
+                                        </div>
+                                        <div className="col-span-2 flex">
+                                            <Input
+                                                value={child.suffix}
+                                                onChange={(e) => handleChildInputChange(index, 'suffix', e.target.value)}
+                                                className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                                placeholder="Suffix"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveChild(index)}
+                                                className="ml-1 flex-shrink-0 text-black"
+                                                style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '4px' }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Child Last Name - Desktop */}
+                                    <div className="hidden sm:block col-span-4">
                                         <Input
                                             required
                                             value={child.lastName}
@@ -410,8 +520,8 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                         />
                                     </div>
 
-                                    {/* Child Suffix and Remove Button */}
-                                    <div className="col-span-2 flex items-center">
+                                    {/* Child Suffix and Remove Button - Desktop */}
+                                    <div className="hidden sm:flex col-span-2 items-center">
                                         <div className="w-full">
                                             <Input
                                                 value={child.suffix}
@@ -434,9 +544,9 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
                         {/* Contact Info Tab */}
                         <TabsContent value="contact-info" className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STREET ADDRESS</label>
+                                    <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STREET ADDRESS</label>
                                     <Input
                                         value={guestData.address.street1}
                                         onChange={(e) => handleInputChange('address', {
@@ -448,7 +558,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                 </div>
                                 {/* Street 2 */}
                                 <div>
-                                    <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>UNIT / APT</label>
+                                    <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>UNIT / APT</label>
                                     <Input
                                         value={guestData.address.street2}
                                         onChange={(e) => handleInputChange('address', {
@@ -459,8 +569,59 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     />
                                 </div>
                             </div>
-                            {/* City */}
-                            <div className="grid grid-cols-12 gap-4">
+
+                            {/* City, State, Zip - Mobile */}
+                            <div className="sm:hidden space-y-4">
+                                {/* City */}
+                                <div>
+                                    <label className="block text-xs font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>CITY</label>
+                                    <Input
+                                        value={guestData.address.city}
+                                        onChange={(e) => handleInputChange('address', {
+                                            ...guestData.address,
+                                            city: e.target.value
+                                        })}
+                                        className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                    />
+                                </div>
+                                {/* State and Zip in same row */}
+                                <div className="grid grid-cols-2 gap-2">
+                                    {/* State */}
+                                    <div>
+                                        <label className="block text-xs font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STATE</label>
+                                        <select
+                                            value={guestData.address.state}
+                                            onChange={(e) => handleInputChange('address', {
+                                                ...guestData.address,
+                                                state: e.target.value
+                                            })}
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs text-black"
+                                            style={{ paddingBottom: '11px' }}
+                                        >
+                                            {stateOptions.map(option => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    {/* Zip Code */}
+                                    <div>
+                                        <label className="block text-xs font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>ZIP CODE</label>
+                                        <Input
+                                            value={guestData.address.zipCode}
+                                            onChange={(e) => handleInputChange('address', {
+                                                ...guestData.address,
+                                                zipCode: e.target.value
+                                            })}
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* City, State, Zip - Desktop */}
+                            <div className="hidden sm:grid grid-cols-12 gap-4">
                                 <div className="col-span-6">
                                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>CITY</label>
                                     <Input
@@ -504,16 +665,17 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     />
                                 </div>
                             </div>
+
                             {/* Country */}
-                            <div className="col-span-12">
-                                <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>COUNTRY</label>
+                            <div>
+                                <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>COUNTRY</label>
                                 <select
                                     value={guestData.address.country}
                                     onChange={(e) => handleInputChange('address', {
                                         ...guestData.address,
                                         country: e.target.value
                                     })}
-                                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
+                                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
                                     style={{ paddingBottom: '11px' }}
                                 >
                                     {countryOptions.map(option => (
@@ -523,10 +685,11 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     ))}
                                 </select>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {/* Email */}
                                 <div>
-                                    <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>EMAIL</label>
+                                    <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>EMAIL</label>
                                     <Input
                                         value={guestData.email}
                                         onChange={(e) => handleInputChange('email', e.target.value)}
@@ -535,7 +698,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                 </div>
                                 {/* Phone Number */}
                                 <div>
-                                    <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>MOBILE</label>
+                                    <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>MOBILE</label>
                                     <Input
                                         value={guestData.phoneNumber}
                                         onChange={handlePhoneNumberChange}
@@ -548,35 +711,49 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
                         {/* RSVP Status Tab */}
                         <TabsContent value="rsvp-status" className="space-y-4">
-                            <div className="space-y-4 pt-1 pl-8 py-1 pr-8">
-                                <div className="grid grid-cols-4 gap-4">
-                                    <label className="block text-sm font-pop text-black col-span-3"
-                                        style={{
-                                            letterSpacing: '1px',
-                                        }}>
+                            <div className="space-y-4 pt-1 px-2 sm:px-8 py-1">
+                                {/* Mobile-friendly headers */}
+                                <div className="grid grid-cols-6 gap-2 sm:hidden">
+                                    <label className="block text-xs font-pop text-black col-span-2" style={{ letterSpacing: '1px' }}>
                                         GUESTS
                                     </label>
-                                    <label className="block text-sm font-pop text-black col-span-1"
-                                        style={{
-                                            letterSpacing: '1px'
-                                        }}>
+                                    <label className="block text-xs font-pop text-black col-span-2" style={{ letterSpacing: '1px' }}>
                                         RSVP
                                     </label>
+                                    <label className="block text-xs font-pop text-black col-span-2" style={{ letterSpacing: '1px' }}>
+                                        ENTRÉE
+                                    </label>
+                                </div>
 
+                                {/* Desktop headers */}
+                                <div className="hidden sm:grid grid-cols-6 gap-4">
+                                    <label className="block text-sm font-pop text-black col-span-2" style={{ letterSpacing: '1px' }}>
+                                        GUESTS
+                                    </label>
+                                    <label className="block text-sm font-pop text-black col-span-2" style={{ letterSpacing: '1px' }}>
+                                        RSVP
+                                    </label>
+                                    <label className="block text-sm font-pop text-black col-span-2" style={{ letterSpacing: '1px' }}>
+                                        ENTRÉE CHOICE
+                                    </label>
+                                </div>
+
+                                {/* RSVP entries for all guests */}
+                                <div className="space-y-4">
                                     {guestArray.map((guest, index) => (
-                                        <React.Fragment key={index}>
+                                        <div key={index} className="grid grid-cols-6 gap-2 sm:gap-4 items-center">
                                             {/* Guest Name */}
-                                            <div className="col-span-3 pt-2">
-                                                <span className="text-sm font-pop text-gray-500">{index + 1}. </span>
-                                                <span className="font-pop text-gray-500">{guest.firstName} {guest.lastName}</span>
+                                            <div className="col-span-2 pt-2">
+                                                <span className="text-xs sm:text-sm font-pop text-gray-500">{index + 1}. </span>
+                                                <span className="text-xs sm:text-sm font-pop text-gray-500 break-words">{guest.firstName} {guest.lastName}</span>
                                             </div>
 
                                             {/* RSVP Status Dropdown */}
-                                            <div className="col-span-1">
+                                            <div className="col-span-2">
                                                 <select
                                                     value={guest.rsvpStatus}
                                                     onChange={(e) => handleRSVPChange(index, e.target.value)}
-                                                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
+                                                    className={`w-full sm:w-32 border rounded-md p-2 bg-white text-xs sm:text-sm ${getRsvpStyling(guest.rsvpStatus).textColor}`}
                                                 >
                                                     {rsvpStatuses.map(option => (
                                                         <option key={option.value} value={option.value}>
@@ -585,26 +762,32 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                                     ))}
                                                 </select>
                                             </div>
-                                        </React.Fragment>
+
+                                            {/* Entrée Choice Dropdown - Only visible if attending */}
+                                            <div className="col-span-2">
+                                                {guest.rsvpStatus === "Attending" ? (
+                                                    <select
+                                                        value={guest.entree || ''}
+                                                        onChange={(e) => handleEntreeChange(index, e.target.value)}
+                                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
+                                                    >
+                                                        <option value="" disabled>Select Entrée</option>
+                                                        <option value="Beef">Beef</option>
+                                                        <option value="Fish">Fish</option>
+                                                        <option value="Vegetarian">Vegetarian</option>
+                                                    </select>
+                                                ) : (
+                                                    <div className="w-full p-2 text-gray-400 text-xs sm:text-sm">
+                                                        {guest.rsvpStatus === "Declined" ? "Not Attending" : "Awaiting RSVP"}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     ))}
                                 </div>
 
-                                <div className="col-span-12">
-                                    <label className="block text-sm font-pop text-black"
-                                        style={{
-                                            lineHeight: '2.25em',
-                                            letterSpacing: '1px'
-                                        }}>
-                                        Are there any dietary restrictions that we should know of?
-                                    </label>
-                                    <Input
-                                        value={guestData.diet}
-                                        onChange={(e) => handleInputChange('diet', e.target.value)}
-                                        className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                                    />
-                                </div>
-                                <div className="col-span-12">
-                                    <label className="block text-sm font-pop text-black"
+                                <div className="pt-4">
+                                    <label className="block text-xs sm:text-sm font-pop text-black"
                                         style={{
                                             lineHeight: '2.25em',
                                             letterSpacing: '1px'
@@ -622,27 +805,27 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                     </Tabs>
 
                     <DialogFooter className="mt-6">
-                        <div className="sticky bottom-0 bg-[rgb(238, 238, 238)] px-6 py-4 border-t"
+                        <div className="sticky bottom-0 bg-[rgb(238, 238, 238)] px-2 sm:px-6 py-4 border-t w-full"
                             style={{ backgroundColor: 'rgb(238, 238, 238' }}>
                             <div className="flex justify-end space-x-2">
                                 <Button
                                     type="button"
                                     variant="outline"
                                     onClick={onClose}
-                                    className="rounded-md border border-black bg-white px-4 py-2 text-sm font-pop text-black shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                    className="rounded-md border border-black bg-white px-3 sm:px-4 py-2 text-xs sm:text-sm font-pop text-black shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                                     style={{ letterSpacing: '1px' }}>
                                     CANCEL
                                 </Button>
                                 <Button
                                     type="submit"
-                                    className="rounded-md border border-black bg-black px-4 py-2 text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                    className="rounded-md border border-black bg-black px-3 sm:px-4 py-2 text-xs sm:text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                                     style={{ letterSpacing: '1px' }}>SAVE CHANGES</Button>
                             </div>
                         </div>
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog >
+        </Dialog>
     );
 };
 

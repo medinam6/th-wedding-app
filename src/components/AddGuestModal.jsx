@@ -42,9 +42,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
   const [showAddress, setShowAddress] = useState(false);
   const [showContact, setShowContact] = useState(false);
 
-
-
-
   const handleClose = () => {
     resetForm();
     onClose();
@@ -182,25 +179,84 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
     onClose();
   };
 
-
-
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) { handleClose() } }}>
       <DialogContent
-        className="sm:max-w-2xl bg-gray-900 rounded-lg flex flex-col max-h-[90vh]"
+        className="sm:max-w-2xl bg-gray-900 rounded-lg flex flex-col max-h-[90vh] w-full"
         style={{
           backgroundColor: 'rgb(238, 238, 238)',
           padding: '1.5rem'
         }}
       >
-        <DialogHeader className="sticky top-0 bg-[rgb(238, 238, 238)] z-10 px-6 py-4">
-          <DialogTitle className="font-pop text-black">Add New Guest</DialogTitle>
+        <DialogHeader className="sticky top-0 bg-[rgb(238, 238, 238)] z-10 px-2 sm:px-6 py-2 sm:py-4">
+          <DialogTitle className="font-pop text-black text-center sm:text-left">Add New Guest</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto px-6">
+        <div className="flex-1 overflow-y-auto px-2 sm:px-6">
           <hr style={{ borderTop: '1px solid gray', paddingBottom: '1px' }}></hr>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-12 gap-4">
+            {/* Primary Guest - Mobile Layout */}
+            <div className="sm:hidden space-y-3 pt-2">
+              {/* Title */}
+              <div>
+                <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>TITLE</label>
+                <select
+                  value={guestData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs text-black"
+                >
+                  {titleOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* First & Last Name */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>
+                    FIRST NAME <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    id="firstName"
+                    required
+                    value={guestData.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    placeholder="First Name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>
+                    LAST NAME <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    id="lastName"
+                    required
+                    value={guestData.lastName}
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    placeholder="Last Name"
+                  />
+                </div>
+              </div>
+
+              {/* Suffix */}
+              <div>
+                <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>SUFFIX</label>
+                <Input
+                  id="suffix"
+                  value={guestData.suffix}
+                  onChange={(e) => handleInputChange('suffix', e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                />
+              </div>
+            </div>
+
+            {/* Primary Guest - Desktop Layout */}
+            <div className="hidden sm:grid sm:grid-cols-12 sm:gap-4">
               {/* Title */}
               <div className="col-span-2" style={{ paddingLeft: '4px' }}>
                 <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>TITLE</label>
@@ -220,7 +276,9 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
 
               {/* First Name */}
               <div className="col-span-4">
-                <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>FIRST NAME <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>
+                  FIRST NAME <span className="text-red-500">*</span>
+                </label>
                 <Input
                   id="firstName"
                   required
@@ -233,7 +291,9 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
 
               {/* Last Name */}
               <div className="col-span-4">
-                <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>LAST NAME <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>
+                  LAST NAME <span className="text-red-500">*</span>
+                </label>
                 <Input
                   id="lastName"
                   required
@@ -261,16 +321,82 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               <Button
                 type="button"
                 variant="link"
-                className="text-black font-small underline hover:no-underline flex items-center gap-1"
+                className="text-black text-xs sm:text-sm font-small underline hover:no-underline flex items-center gap-1"
                 onClick={handleAddPartner}
-                style={{ marginTop: '0em', paddingLeft: '8px' }}
+                style={{ marginTop: '0.5em', paddingLeft: '8px' }}
               >
                 + Add Plus One
               </Button>
             )}
 
+            {/* Partner Fields - Mobile Layout */}
             {showPartner && (
-              <div className="grid grid-cols-12 gap-4">
+              <div className="sm:hidden space-y-3">
+                {/* Partner Title */}
+                <div>
+                  <select
+                    value={guestData.partner?.title}
+                    onChange={(e) => handlePartnerInputChange('title', e.target.value)}
+                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs text-black"
+                  >
+                    {titleOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Partner First & Last Name */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Input
+                      id="partnerFirstName"
+                      required
+                      value={guestData.partner?.firstName}
+                      onChange={(e) => handlePartnerInputChange('firstName', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      placeholder="First Name"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      id="partnerLastName"
+                      required
+                      value={guestData.partner?.lastName}
+                      onChange={(e) => handlePartnerInputChange('lastName', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      placeholder="Last Name"
+                    />
+                  </div>
+                </div>
+
+                {/* Partner Suffix and Remove */}
+                <div className="flex items-center">
+                  <div className="flex-grow">
+                    <Input
+                      id="partnerSuffix"
+                      value={guestData.partner?.suffix}
+                      onChange={(e) => handlePartnerInputChange('suffix', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      placeholder="Suffix"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRemovePartner}
+                    className="ml-2 flex-shrink-0 text-black"
+                    style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '4px' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Partner Fields - Desktop Layout */}
+            {showPartner && (
+              <div className="hidden sm:grid sm:grid-cols-12 sm:gap-4">
                 {/* Partner Title */}
                 <div className="col-span-2" style={{ paddingLeft: '4px' }}>
                   <select
@@ -313,7 +439,7 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
 
                 {/* Partner Suffix and Remove Button */}
                 <div className="col-span-2 flex items-center">
-                  <div className="w-full">  {/* This wrapper ensures the input takes full width */}
+                  <div className="w-full">
                     <Input
                       id="partnerSuffix"
                       value={guestData.partner?.suffix}
@@ -338,16 +464,79 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               <Button
                 type="button"
                 variant="link"
-                className="text-black font-small underline hover:no-underline flex items-center gap-1"
+                className="text-black text-xs sm:text-sm font-small underline hover:no-underline flex items-center gap-1"
                 onClick={handleAddChild}
-                style={{ marginTop: '0em', paddingLeft: '8px' }}
+                style={{ marginTop: '0.5em', paddingLeft: '8px' }}
               >
                 + Add Additional Guest
               </Button>
             )}
 
+            {/* Children Fields - Mobile Layout */}
             {guestData?.children?.map((child, index) => (
-              <div key={index} className="grid grid-cols-12 gap-4">
+              <div key={index} className="sm:hidden space-y-3">
+                {/* Child Title */}
+                <div>
+                  <select
+                    value={child.title}
+                    onChange={(e) => handleChildInputChange(index, 'title', e.target.value)}
+                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs text-black"
+                  >
+                    {titleOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Child First & Last Name */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Input
+                      required
+                      value={child.firstName}
+                      onChange={(e) => handleChildInputChange(index, 'firstName', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      placeholder="First Name"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      required
+                      value={child.lastName}
+                      onChange={(e) => handleChildInputChange(index, 'lastName', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      placeholder="Last Name"
+                    />
+                  </div>
+                </div>
+
+                {/* Child Suffix and Remove */}
+                <div className="flex items-center">
+                  <div className="flex-grow">
+                    <Input
+                      value={child.suffix}
+                      onChange={(e) => handleChildInputChange(index, 'suffix', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      placeholder="Suffix"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveChild(index)}
+                    className="ml-2 flex-shrink-0 text-black"
+                    style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '4px' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {/* Children Fields - Desktop Layout */}
+            {guestData?.children?.map((child, index) => (
+              <div key={index} className="hidden sm:grid sm:grid-cols-12 sm:gap-4">
                 <div className="col-span-2" style={{ paddingLeft: '4px' }}>
                   <select
                     value={child.title}
@@ -403,19 +592,15 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               </div>
             ))}
 
-
-
-
-
             {/* Mailing Address */}
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               <button
                 type="button"
                 onClick={() => setShowAddress(!showAddress)}
                 className="w-full flex items-center justify-between py-2 text-left"
               >
-                <span className="text-lg font-pop text-black">Mailing Address</span>
-                <span className="text-3xl text-black font-pop" style={{
+                <span className="text-base sm:text-lg font-pop text-black">Mailing Address</span>
+                <span className="text-2xl sm:text-3xl text-black font-pop" style={{
                   minWidth: '20px',
                   textAlign: 'center'
                 }}>
@@ -424,15 +609,40 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               </button>
               <hr style={{ borderTop: '1px solid gray' }}></hr>
             </div>
-            {/* Collapsible Content */}
-            <div
-              className={`transition-all duration-200 overflow-hidden ${showAddress ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
 
+            {/* Collapsible Address Content */}
+            <div
+              className={`transition-all duration-200 overflow-hidden ${showAddress ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
+            >
               <div className="space-y-4 pt-1 pl-1 py-1 pr-1">
-                {/* Street 1 */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Street 1 & 2 - Mobile */}
+                <div className="sm:hidden space-y-3">
+                  <div>
+                    <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>STREET ADDRESS</label>
+                    <Input
+                      value={guestData.address.street1}
+                      onChange={(e) => handleInputChange('address', {
+                        ...guestData.address,
+                        street1: e.target.value
+                      })}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>UNIT / APT</label>
+                    <Input
+                      value={guestData.address.street2}
+                      onChange={(e) => handleInputChange('address', {
+                        ...guestData.address,
+                        street2: e.target.value
+                      })}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    />
+                  </div>
+                </div>
+
+                {/* Street 1 & 2 - Desktop */}
+                <div className="hidden sm:grid sm:grid-cols-2 sm:gap-4">
                   <div>
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STREET ADDRESS</label>
                     <Input
@@ -444,7 +654,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                       className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
                     />
                   </div>
-                  {/* Street 2 */}
                   <div>
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>UNIT / APT</label>
                     <Input
@@ -457,8 +666,54 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                     />
                   </div>
                 </div>
-                {/* City */}
-                <div className="grid grid-cols-12 gap-4">
+
+                {/* City, State, Zip - Mobile */}
+                <div className="sm:hidden space-y-3">
+                  <div>
+                    <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>CITY</label>
+                    <Input
+                      value={guestData.address.city}
+                      onChange={(e) => handleInputChange('address', {
+                        ...guestData.address,
+                        city: e.target.value
+                      })}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>STATE</label>
+                      <select
+                        value={guestData.address.state}
+                        onChange={(e) => handleInputChange('address', {
+                          ...guestData.address,
+                          state: e.target.value
+                        })}
+                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs text-black"
+                      >
+                        {stateOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>ZIP CODE</label>
+                      <Input
+                        value={guestData.address.zipCode}
+                        onChange={(e) => handleInputChange('address', {
+                          ...guestData.address,
+                          zipCode: e.target.value
+                        })}
+                        className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* City, State, Zip - Desktop */}
+                <div className="hidden sm:grid sm:grid-cols-12 sm:gap-4">
                   <div className="col-span-6">
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>CITY</label>
                     <Input
@@ -470,7 +725,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                       className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
                     />
                   </div>
-                  {/* State */}
                   <div className="col-span-3">
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STATE</label>
                     <select
@@ -489,7 +743,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                       ))}
                     </select>
                   </div>
-                  {/* Zip Code */}
                   <div className="col-span-3">
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>ZIP CODE</label>
                     <Input
@@ -501,38 +754,38 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                       className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
                     />
                   </div>
-                  {/* Country */}
-                  <div className="col-span-12">
-                    <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>COUNTRY</label>
-                    <select
-                      value={guestData.address.country}
-                      onChange={(e) => handleInputChange('address', {
-                        ...guestData.address,
-                        country: e.target.value
-                      })}
-                      className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
-                      style={{ paddingBottom: '11px' }}
-                    >
-                      {countryOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                </div>
+
+                {/* Country - Mobile & Desktop */}
+                <div>
+                  <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2em sm:lineHeight:2.25em', letterSpacing: '1px' }}>COUNTRY</label>
+                  <select
+                    value={guestData.address.country}
+                    onChange={(e) => handleInputChange('address', {
+                      ...guestData.address,
+                      country: e.target.value
+                    })}
+                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
+                  >
+                    {countryOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
             {/* Contact */}
-            <div className="mt-8">
+            <div className="mt-4 sm:mt-8">
               <button
                 type="button"
                 onClick={() => setShowContact(!showContact)}
                 className="w-full flex items-center justify-between py-2 text-left"
               >
-                <span className="text-lg font-pop text-black">Email & Mobile</span>
-                <span className="text-3xl font-pop text-black" style={{
+                <span className="text-base sm:text-lg font-pop text-black">Email & Mobile</span>
+                <span className="text-2xl sm:text-3xl font-pop text-black" style={{
                   minWidth: '20px',
                   textAlign: 'center'
                 }}>
@@ -541,14 +794,35 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               </button>
               <hr style={{ borderTop: '1px solid gray' }}></hr>
             </div>
-            {/* Collapsible Content */}
+
+            {/* Collapsible Contact Content */}
             <div
-              className={`transition-all duration-200 overflow-hidden ${showContact ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
+              className={`transition-all duration-200 overflow-hidden ${showContact ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <div className="space-y-4 pt-1 pl-1 py-1 pr-1">
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Email */}
+                {/* Email & Phone - Mobile */}
+                <div className="sm:hidden space-y-3">
+                  <div>
+                    <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>EMAIL</label>
+                    <Input
+                      value={guestData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-pop text-black" style={{ lineHeight: '2em', letterSpacing: '1px' }}>MOBILE</label>
+                    <Input
+                      value={guestData.phoneNumber}
+                      onChange={handlePhoneNumberChange}
+                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                      maxLength={14}
+                    />
+                  </div>
+                </div>
+
+                {/* Email & Phone - Desktop */}
+                <div className="hidden sm:grid sm:grid-cols-2 sm:gap-4">
                   <div>
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>EMAIL</label>
                     <Input
@@ -557,7 +831,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                       className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
                     />
                   </div>
-                  {/* Phone Number */}
                   <div>
                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>MOBILE</label>
                     <Input
@@ -570,20 +843,32 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                 </div>
               </div>
             </div>
+
             {/* Buttons */}
-            <div className="sticky bottom-0 bg-[rgb(238, 238, 238)] px-6 py-4 border-t" style={{ backgroundColor: 'rgb(238, 238, 238' }}>
+            <div className="sticky bottom-0 bg-[rgb(238, 238, 238)] px-2 sm:px-6 py-4 border-t" style={{ backgroundColor: 'rgb(238, 238, 238' }}>
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={handleClose} className="rounded-md border border-black bg-white px-4 py-2 text-sm font-pop text-black shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ letterSpacing: '1px' }}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  className="rounded-md border border-black bg-white px-3 sm:px-4 py-2 text-xs sm:text-sm font-pop text-black shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  style={{ letterSpacing: '1px' }}
+                >
                   CANCEL
                 </Button>
-                <Button type="submit" className="rounded-md border border-black bg-black px-4 py-2 text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ letterSpacing: '1px' }}>ADD GUEST</Button>
+                <Button
+                  type="submit"
+                  className="rounded-md border border-black bg-black px-3 sm:px-4 py-2 text-xs sm:text-sm font-pop text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  style={{ letterSpacing: '1px' }}
+                >
+                  ADD GUEST
+                </Button>
               </div>
             </div>
           </form>
         </div>
       </DialogContent>
     </Dialog>
-
   );
 };
 
