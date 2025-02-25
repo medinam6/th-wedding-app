@@ -18,4 +18,3 @@ const WeddingPage = () => (
 )
 
 export default WeddingPage
- 
