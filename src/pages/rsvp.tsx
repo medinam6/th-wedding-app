@@ -9,9 +9,12 @@ const RSVPPage: React.FC = () => (
                 RSVP
             </h1>
             {/* Subheader */}
-            <h2 className="font-bodo text-m font-bold text-white text-center pt-6">
-                Kindly Reply by Month, X, XXXX
-            </h2>
+            <h3 className="font-bodo text-sm font-bold text-white text-center pt-6">
+                Kindly Reply by Monday
+            </h3>
+								<h1 className="font-bodo text-xl font-bold text-white text-center pt-4">
+								March, 9, 2026
+								</h1>
             {/* Form */}
             <RSVPForm />
         </div>
