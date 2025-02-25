@@ -9,7 +9,6 @@ const NavMenu = () => {
   const menuList = [
     { name: 'Home Page', path: '/' },
     { name: 'THE WEDDING', path: '/the-wedding' },
-    { name: 'EVENTS', path: '/events' },
     { name: 'OUR STORY', path: '/our-story' },
     { name: 'WEDDING PARTY', path: '/wedding-party' },
     { name: 'REGISTRY', path: '/registry' },
