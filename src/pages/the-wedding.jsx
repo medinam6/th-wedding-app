@@ -5,7 +5,7 @@ const WeddingPage = () => (
         April 20, 2026
       </p>
     </div>
-    <div className="bg-white h-screen pt-[8rem] pl-10 pr-10 pt-20 pb-20">
+    <div className="bg-white pt-[8rem] pl-10 pr-10 pt-20 pb-20">
       <p className="font-bodo text-black text-xl">CEREMONY</p>
       <p className="font-bodo text-black pt-2">Begins Promptly at 4:00 PM at JW Marriott Las Vegas Resort & Spa</p>
       <p className="font-bodo text-black pt-2">221 N Rampart Blvd, Las Vegas, NV 89145</p>
