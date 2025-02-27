@@ -1,35 +1,64 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react"
-import { Bars3Icon } from "@heroicons/react/16/solid"
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 
 const NavMenu = () => {
-  const menuList = ['Home Page', 'THE WEDDING', 'EVENTS', 'OUR STORY', 'WEDDING PARTY', 'REGISTRY', 'RSVP', 'FAQ']
-  
-  return (<div className="top-0 m-5 flex justify-end text-right">
-	<Menu>
-		<MenuButton className="inline-flex items-center gap-2 py-1.5 px-3 text-sm/6 font-semibold text-black focus:outline-none ">
-			<Bars3Icon className="size-8 fill-white" />
-		</MenuButton>
+  const [isOpen, setIsOpen] = useState(false);
+  const menuList = [
+    { name: 'Home Page', path: '/' },
+    { name: 'THE WEDDING', path: '/the-wedding' },
+    { name: 'OUR STORY', path: '/our-story' },
+    { name: 'WEDDING PARTY', path: '/wedding-party' },
+    { name: 'REGISTRY', path: '/registry' },
+    { name: 'RSVP', path: '/rsvp' },
+    { name: 'FAQ', path: '/faq' }
+  ];
 
-		<MenuItems
-			transition
-			anchor="bottom end"
-			className="w-52 origin-top-right rounded-xl border border-white/5 bg-white/5 p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-		>
-      {menuList.map((item, index) =>(
-        <>
-       <MenuItem key={item}>
-        <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
-        <p className="font-pop">
-        {item}
-        </p>
-        </button>
-      </MenuItem>
-      {index === 0 &&
-        <div className="my-1 h-px bg-white/15" />}
+  return (
+    <>
+      <button
+        className="fixed top-5 right-5 z-60 p-2 rounded-md text-white hover:text-gray-200 focus:outline-none"
+        style={{ zIndex: 60 }}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? (
+          <XMarkIcon className="h-8 w-8 text-black" aria-hidden="true" /> // XMarkIcon with black color
+        ) : (
+          <Bars3Icon className="h-8 w-8 text-white" aria-hidden="true" /> // Bars3Icon with white color
+        )}
+      </button>
+
+      <div
+        className={`fixed top-0 right-0 h-full w-1/2 bg-white transform transition-transform duration-500 ease-in-out z-50
+             ${isOpen ? 'translate-y-0' : '-translate-y-full'
+          }`}
+      >
+        <nav className="flex flex-col h-full pt-20">
+          {menuList.map((item, index) => (
+            <Link
+              key={item.name}
+              href={item.path}
+              className={`px-6 py-4 text-gray-700 font-pop text-sm transform transition-opacity duration-1000 ease-out
+              ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+              onClick={() => setIsOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </>
-      ))}
-        </MenuItems>
-	</Menu>
-</div>)}
+  );
+};
 
-export default NavMenu
+export default NavMenu;
