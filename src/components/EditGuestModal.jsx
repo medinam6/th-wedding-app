@@ -15,11 +15,19 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs";
 import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectItem
+} from "@/components/ui/select";
+import {
     titleOptions,
     stateOptions,
     countryOptions,
     formatPhoneNumber,
     rsvpStatuses,
+    entreeOptions,
     getRsvpStyling,
     getTotalPartySize,
     extractGuestsIntoArray,
@@ -233,21 +241,25 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                             {/* Primary Guest */}
                             <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4">
                                 {/* Title */}
-                                <div className="col-span-2" style={{ paddingLeft: '4px' }}>
+                                <div className="col-span-2">
                                     <label className="block text-xs sm:text-sm font-pop text-black"
                                         style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>TITLE</label>
-                                    <select
-                                        value={guestData.title}
-                                        onChange={(e) => handleInputChange('title', e.target.value)}
-                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
-                                        style={{ paddingBottom: '11px' }}
-                                    >
-                                        {titleOptions.map(option => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <Select value={guestData.title} onValueChange={(value) => handleInputChange("title", value)}>
+                                        <SelectTrigger className="w-full border border-gray-300 h-10 rounded-md p-2 bg-white text-black">
+                                            <SelectValue placeholder="Select..." />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                            {titleOptions.map((option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                    className="hover:bg-gray-200 focus:bg-gray-300"
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
 
                                 {/* First Name */}
@@ -345,19 +357,26 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                             {showPartner && (
                                 <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4">
                                     {/* Partner Title */}
-                                    <div className="col-span-2" style={{ paddingLeft: '4px' }}>
-                                        <select
+                                    <div className="col-span-2">
+                                        <Select
                                             value={guestData.partner?.title || ''}
-                                            onChange={(e) => handlePartnerInputChange('title', e.target.value)}
-                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
-                                            style={{ paddingBottom: '11px' }}
-                                        >
-                                            {titleOptions.map(option => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            onValueChange={(value) => handlePartnerInputChange('title', value)}
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black">
+                                            <SelectTrigger className="w-full border border-gray-300 h-10 rounded-md p-2 bg-white sm:text-sm text-black">
+                                                <SelectValue placeholder="Select..." />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                                {titleOptions.map((option) => (
+                                                    <SelectItem
+                                                        key={option.value}
+                                                        value={option.value}
+                                                        className="hover:bg-gray-200 focus:bg-gray-300"
+                                                    >
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     {/* Partner First Name */}
@@ -454,19 +473,27 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                             {guestData.children?.map((child, index) => (
                                 <div key={index} className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4">
                                     {/* Child Title */}
-                                    <div className="col-span-2" style={{ paddingLeft: '4px' }}>
-                                        <select
+                                    <div className="col-span-2">
+                                        <Select
                                             value={child.title}
-                                            onChange={(e) => handleChildInputChange(index, 'title', e.target.value)}
+                                            onValueChange={(value) => handleChildInputChange(index, 'title', value)}
                                             className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
-                                            style={{ paddingBottom: '11px' }}
-                                        >
-                                            {titleOptions.map(option => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            style={{ paddingBottom: '11px' }}>
+                                            <SelectTrigger className="w-full border border-gray-300 h-10 rounded-md p-2 bg-white sm:text-sm text-black">
+                                                <SelectValue placeholder="Select..." />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                                {titleOptions.map((option) => (
+                                                    <SelectItem
+                                                        key={option.value}
+                                                        value={option.value}
+                                                        className="hover:bg-gray-200 focus:bg-gray-300"
+                                                    >
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     {/* Child First Name */}
@@ -589,21 +616,29 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                     {/* State */}
                                     <div>
                                         <label className="block text-xs font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STATE</label>
-                                        <select
+                                        <Select
                                             value={guestData.address.state}
-                                            onChange={(e) => handleInputChange('address', {
+                                            onValueChange={(value) => handleInputChange('address', {
                                                 ...guestData.address,
-                                                state: e.target.value
+                                                state: value
                                             })}
-                                            className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs text-black"
-                                            style={{ paddingBottom: '11px' }}
+                                            className="w-full border border-gray-300 rounded-md p-2 bg-white sm:text-sm text-black"
                                         >
-                                            {stateOptions.map(option => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            <SelectTrigger className="w-full border border-gray-300 h-10 rounded-md p-2 bg-white sm:text-sm text-black">
+                                                <SelectValue placeholder="Select..." />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                                {stateOptions.map((option) => (
+                                                    <SelectItem
+                                                        key={option.value}
+                                                        value={option.value}
+                                                        className="hover:bg-gray-200 focus:bg-gray-300"
+                                                    >
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     {/* Zip Code */}
                                     <div>
@@ -636,21 +671,29 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                                 {/* State */}
                                 <div className="col-span-3">
                                     <label className="block text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>STATE</label>
-                                    <select
+                                    <Select
                                         value={guestData.address.state}
-                                        onChange={(e) => handleInputChange('address', {
+                                        onValueChange={(value) => handleInputChange('address', {
                                             ...guestData.address,
-                                            state: e.target.value
+                                            state: value
                                         })}
-                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-sm text-black"
-                                        style={{ paddingBottom: '11px' }}
-                                    >
-                                        {stateOptions.map(option => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        className="w-full border border-gray-300 rounded-md p-2 bg-white sm:text-sm text-black"
+                                        >
+                                        <SelectTrigger className="w-full border border-gray-300 rounded-md p-2 bg-white sm:text-sm text-black">
+                                            <SelectValue placeholder="Select..." />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                            {stateOptions.map((option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                    className="hover:bg-gray-200 focus:bg-gray-300"
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 {/* Zip Code */}
                                 <div className="col-span-3">
@@ -669,21 +712,29 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
                             {/* Country */}
                             <div>
                                 <label className="block text-xs sm:text-sm font-pop text-black" style={{ lineHeight: '2.25em', letterSpacing: '1px' }}>COUNTRY</label>
-                                <select
+                                <Select
                                     value={guestData.address.country}
-                                    onChange={(e) => handleInputChange('address', {
+                                    onValueChange={(value) => handleInputChange('address', {
                                         ...guestData.address,
-                                        country: e.target.value
+                                        country: value
                                     })}
-                                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
-                                    style={{ paddingBottom: '11px' }}
-                                >
-                                    {countryOptions.map(option => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                    className="w-full border border-gray-300 rounded-md p-2 bg-white sm:text-sm text-black"
+                                    style={{ paddingBottom: '11px' }}>
+                                    <SelectTrigger className="w-full border border-gray-300 rounded-md p-2 bg-white sm:text-sm text-black">
+                                        <SelectValue placeholder="Select..." />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                        {countryOptions.map((option) => (
+                                            <SelectItem
+                                                key={option.value}
+                                                value={option.value}
+                                                className="hover:bg-gray-200 focus:bg-gray-300"
+                                            >
+                                                {option.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -750,32 +801,49 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
                                             {/* RSVP Status Dropdown */}
                                             <div className="col-span-2">
-                                                <select
+                                                <Select
                                                     value={guest.rsvpStatus}
-                                                    onChange={(e) => handleRSVPChange(index, e.target.value)}
-                                                    className={`w-full sm:w-32 border rounded-md p-2 bg-white text-xs sm:text-sm ${getRsvpStyling(guest.rsvpStatus).textColor}`}
-                                                >
-                                                    {rsvpStatuses.map(option => (
-                                                        <option key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                    onValueChange={(value) => handleRSVPChange(index, value)}
+                                                    className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black">
+                                                    <SelectTrigger className={`w-full sm:w-32 border rounded-md p-2 bg-white text-xs sm:text-sm ${getRsvpStyling(guest.rsvpStatus).textColor}`}>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                                        {rsvpStatuses.map((option) => (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                                className="hover:bg-gray-200 focus:bg-gray-300"
+                                                            >
+                                                                {option.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                             </div>
 
                                             {/* Entrée Choice Dropdown - Only visible if attending */}
                                             <div className="col-span-2">
                                                 {guest.rsvpStatus === "Attending" ? (
-                                                    <select
+                                                    <Select
                                                         value={guest.entree || ''}
-                                                        onChange={(e) => handleEntreeChange(index, e.target.value)}
-                                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black"
-                                                    >
-                                                        <option value="" disabled>Select Entrée</option>
-                                                        <option value="Beef">Beef</option>
-                                                        <option value="Fish">Fish</option>
-                                                        <option value="Vegetarian">Vegetarian</option>
-                                                    </select>
+                                                        onValueChange={(value) => handleEntreeChange(index, value)}
+                                                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black">
+                                                        <SelectTrigger className="w-full border border-gray-300 rounded-md p-2 bg-white text-xs sm:text-sm text-black">
+                                                            <SelectValue placeholder="Select..." />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-white border border-gray-300 shadow-md">
+                                                            {entreeOptions.map((option) => (
+                                                                <SelectItem
+                                                                    key={option.value}
+                                                                    value={option.value}
+                                                                    className="hover:bg-gray-200 focus:bg-gray-300"
+                                                                >
+                                                                    {option.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 ) : (
                                                     <div className="w-full p-2 text-gray-400 text-xs sm:text-sm">
                                                         {guest.rsvpStatus === "Declined" ? "Not Attending" : "Awaiting RSVP"}

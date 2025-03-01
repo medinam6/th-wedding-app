@@ -235,7 +235,7 @@ export function formatGuestNamesInTable(guest) {
 };
 
 export const titleOptions = [
-  { value: "", label: "Select" },
+  { value: null, label: 'Select...' },
   { value: "Mr.", label: "Mr." },
   { value: "Mrs.", label: "Mrs." },
   { value: "Ms.", label: "Ms." },
@@ -249,6 +249,12 @@ export const rsvpStatuses = [
   { value: "Declined", label: "Declined", color: "text-red-500" }
 ];
 
+export const entreeOptions = [
+  { value: "Beef", label: "Beef" },
+  { value: "Fish", label: "Fish" },
+  { value: "Vegetarian", label: "Vegetarian" }
+]
+
 export const getRsvpStyling = (status) => {
   const statusOption = rsvpStatuses.find(option => option.value === status);
   return {
@@ -257,7 +263,7 @@ export const getRsvpStyling = (status) => {
 };
 
 export const stateOptions = [
-  { value: "", label: "Select..." },
+  { value: null, label: "Select..." },
   { value: "AL", label: "Alabama" },
   { value: "AK", label: "Alaska" },
   { value: "AZ", label: "Arizona" },
@@ -315,7 +321,7 @@ export const stateOptions = [
 ]
 
 export const countryOptions = [
-  { value: "", label: "Select..." },
+  { value: null, label: "Select..." },
   { value: "US", label: "United States" },
   { value: "AF", label: "Afghanistan" },
   { value: "AL", label: "Albania" },
