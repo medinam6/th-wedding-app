@@ -118,9 +118,12 @@ export const weddingDetails = () => {
 
   return (
     <>
-      <div className="text-center relative px-16 pt-6 pb-6 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
+      <div className="text-center px-16 pt-6 pb-6 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
         style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
-        <h3 className='text-xl text-black font-bodo mb-4'>Wedding Details</h3>
+        <h3 className='text-xl text-black font-bodo mb-4'>
+          Wedding Date
+        </h3>
+          Monday, April 20, 2026
         <p className='font-pop text-black text-sm mt-2'>{startTime} - {endTime}</p>
         <p className='font-pop text-black text-sm mt-2'>{weddingAddress}</p>
         <p className='font-pop text-black text-sm mt-2'>{dressCode}</p>

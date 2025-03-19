@@ -171,7 +171,8 @@ const RSVPForm = () => {
                     <div>
                         <div className="divide-y divide-gray-300/50">
                             <div className="py-4 max-w-lg mx-auto text-gray-700 font-pop text-sm text-center">
-                                <p>Please enter the first and last name of one member of your party below.<br /> <br />If you're responding for you and a guest (or your family), you'll be able to RSVP for your entire group on the next page.</p>
+          <p>Kindly Reply by Monday</p>
+          <p>March 9, 2026</p>
                             </div>
                             <form onSubmit={handleSearch}>
                                 <div className="space-y-12">
@@ -209,7 +210,7 @@ const RSVPForm = () => {
     )
 
     const renderSearchResults = () => (
-        <div className="relative px-16 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20">
+        <div className="dpx-16 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20">
             <p className="font-pop text-white pb-3">Select your info below or try searching again.</p>
             <hr style={{ borderTop: '1px solid gray' }}></hr>
             {searchResults.map(guest => (
@@ -244,7 +245,7 @@ const RSVPForm = () => {
                 <hr style={{ borderTop: '1px solid gray' }}></hr>
                 <div className="space-y-4">
                     {guestArray.map((guest, index) => (
-                        <div key={index} className="pb-4 pt-4">
+                        <div key={`${guest._id}-${index}`} className="pb-4 pt-4">
                             <div className="flex justify-between items-center">
                                 {/* Guest Name */}
                                 <div className="pt-4">
@@ -383,13 +384,11 @@ const RSVPForm = () => {
             <hr style={{ borderTop: '1px solid gray' }}></hr>
             <div className="space-y-4">
                 {guestArray.map((guest, index) => (
-                    <div className="flex justify-between items-center pb-4">
-                        <React.Fragment key={index}>
-
+                    <div className="flex justify-between items-center pb-4" key={`${index}-${guest._id}`}>
+                    
                             <div className="pt-4">
                                 <span className="font-pop text-white">{guest.firstName} {guest.lastName} </span>
                             </div>
-
                             <div className="pt-4 flex items-center gap-4">
                                 <div className="flex flex-col items-start">
                                     {getRSVPStatuses(guest).map((status, index) => (
@@ -416,8 +415,7 @@ const RSVPForm = () => {
                                     ))}
                                 </div>
                             </div>
-                        </React.Fragment>
-
+                    
                     </div>
                 ))}
                 <hr style={{ borderTop: '1px solid gray' }}></hr>
