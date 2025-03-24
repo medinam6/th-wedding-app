@@ -166,8 +166,8 @@ const RSVPForm = () => {
     const renderSearchForm = () => (
         <>
             <div className="flex-col mt-0 justify-center overflow-hidden py-6 sm:py-12">
-                <div ref={resultsRef} className="relative px-16 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
-                    style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
+            <div className="px-16 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-2xl sm:rounded-lg sm:px-20"
+    style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
                     <div>
                         <div className="divide-y divide-gray-300/50">
                             <div className="py-4 max-w-lg mx-auto text-gray-700 font-pop text-sm text-center">
@@ -211,8 +211,8 @@ const RSVPForm = () => {
 
     const renderSearchResults = () => (
         <div className="dpx-16 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20">
-            <p className="font-pop text-white pb-3">Select your info below or try searching again.</p>
-            <hr style={{ borderTop: '1px solid gray' }}></hr>
+<p className="font-pop text-white pb-3 max-w-prose mx-auto">Select your info below or try searching again.</p>
+<hr style={{ borderTop: '1px solid gray' }}></hr>
             {searchResults.map(guest => (
                 <div key={guest._id}>
                     <div className="flex p-2 pb-4 justify-between items-center">
@@ -235,7 +235,7 @@ const RSVPForm = () => {
 
 
     const renderRSVPForm = () => (
-        <div className="mt-8 space-y-6" >
+      <div className="mt-8 space-y-6 max-w-5xl mx-auto">
             {weddingDetails()}
             <form onSubmit={(e) => {
                 e.preventDefault();
@@ -339,7 +339,7 @@ const RSVPForm = () => {
                     ))}
                 </div>
                 <div className="flex-col mt-0 justify-center overflow-hidden py-5 sm:py-12">
-                    <div className="relative px-16 pt-10 pb-16 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
+                    <div className="px-16 pt-10 pb-16 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
                         style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
                         <div>
                             <div className="divide-y divide-gray-300/50">
@@ -378,11 +378,10 @@ const RSVPForm = () => {
     );
 
     const renderConfirmation = () => (
-        <div className="mt-8 space-y-6" >
+        <div className="mt-8 space-y-6">
             {weddingDetails()}
             <h2 className="text-xl text-white font-pop font-heavy text-center pb-5">Your RSVP Has Been Submitted Successfully!</h2>
-            <hr style={{ borderTop: '1px solid gray' }}></hr>
-            <div className="space-y-4">
+            <div className="space-y-4 w-2/3 mx-auto">
                 {guestArray.map((guest, index) => (
                     <div className="flex justify-between items-center pb-4" key={`${index}-${guest._id}`}>
                     
@@ -437,8 +436,8 @@ const RSVPForm = () => {
 
     );
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            {!selectedParty && !submitted && (
+<div className="w-full max-w-lg sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto p-6">
+{!selectedParty && !submitted && (
                 <>
                     {renderSearchForm()}
                     {searchResults.length > 0 && renderSearchResults()}
