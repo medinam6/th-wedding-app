@@ -22,7 +22,7 @@ const NavMenu = () => {
   return (
     <>
       <button
-        className="fixed top-5 right-5 z-60 p-2 rounded-md text-white hover:text-gray-200 focus:outline-none"
+        className="fixed top-5 right-5 z-100 p-2 rounded-md text-white hover:text-gray-200 focus:outline-none"
         style={{ zIndex: 60 }}
         onClick={() => setIsOpen(!isOpen)}
       >

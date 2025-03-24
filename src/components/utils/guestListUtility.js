@@ -109,26 +109,15 @@ export const countRsvpStatuses = (allGuests, isMobileView) => {
   }
 }
 
-export const weddingDetails = () => {
-  const startTime = 'Saturday, Month, XX, XXXX 7:00 PM';
-  const endTime = 'Sunday, Month, XX, XXXX 12:00 AM';
-  const weddingAddress = '123 South Main Street, Las Vegas, Nevada 89XXX';
-  const dressCode = 'Semi-Formal: Tuxes and gowns are welcome, and so are suits and cocktail dresses.';
-  const additionalInfo = 'Pre-Ceremony Cocktails being at 6:30 PM, Ceremony will begin at 7:00 PM';
-
-  return (
-    <>
-      <div className="text-center relative px-16 pt-6 pb-6 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
-        style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
-        <h3 className='text-xl text-black font-bodo mb-4'>Wedding Details</h3>
-        <p className='font-pop text-black text-sm mt-2'>{startTime} - {endTime}</p>
-        <p className='font-pop text-black text-sm mt-2'>{weddingAddress}</p>
-        <p className='font-pop text-black text-sm mt-2'>{dressCode}</p>
-        <p className='font-pop text-black text-sm mt-2'>{additionalInfo}</p>
-      </div >
-    </>
-  )
-}
+export const weddingDetails = () => <div className="text-center px-16 pt-6 pb-6 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20"
+  style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
+  <h3 className='text-xl text-black font-bodo mb-4'>
+    Kindly Reply by Monday
+  </h3>
+  <h3 className='text-xl text-black font-bodo mb-4'>
+    March 9, 2026
+  </h3>
+</div >
 
 export const sortGuestList = (guests) => {
   return [...guests].sort((a, b) => {
