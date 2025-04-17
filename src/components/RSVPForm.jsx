@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Check, X } from 'lucide-react'
+import { Check } from 'lucide-react'
 import {
   extractGuestsIntoArray,
   reconstructGuestData,
@@ -33,6 +33,7 @@ const RSVPForm = () => {
 
   function needsToRSVP(guests) {
     const extractedGuests = extractGuestsIntoArray(guests)
+
     return extractedGuests.some(guest => guest.rsvpStatus === 'No Response')
   }
 
@@ -124,8 +125,10 @@ const RSVPForm = () => {
           if (value === 'Declined') {
             return { ...guest, rsvpStatus: value, entree: '' }
           }
+
           return { ...guest, rsvpStatus: value }
         }
+
         return guest
       })
     )
@@ -192,7 +195,7 @@ const RSVPForm = () => {
                         </div>
                         {isSearchSubmitted && searchResults.length < 1 ? (
                           <span className="text-xs text-center-aligned text-gray-500">
-                            Hm... we can't find your name. Make sure you enter your name exactly as
+                            Hm... we cannot find your name. Make sure you enter your name exactly as
                             it appears on your invitation.
                           </span>
                         ) : null}
@@ -423,13 +426,13 @@ const RSVPForm = () => {
                     )}
                     {status === 'Declined' && (
                       <>
-                        <X className="w-6 h-6 text-red-500" />
+                        <Check className="w-6 h-6 text-red-500" />
                         <span className="text-white">Will Not Attend</span>
                       </>
                     )}
                     {status === ('No Response' || '') && (
                       <>
-                        <Minus className="w-6 h-6 text-white" />
+                        <Check className="w-6 h-6 text-white" />
                         <span className="text-gray-400">No Response</span>
                       </>
                     )}
@@ -454,6 +457,7 @@ const RSVPForm = () => {
       </div>
     </div>
   )
+
   return (
     <div className="w-full max-w-lg sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto p-6">
       {!selectedParty && !submitted && (

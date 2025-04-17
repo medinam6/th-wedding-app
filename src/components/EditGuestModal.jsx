@@ -101,6 +101,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
         ...updatedChildren[index],
         [field]: value,
       }
+
       return {
         ...prev,
         children: updatedChildren,
@@ -169,8 +170,10 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
           if (value !== 'Attending') {
             return { ...guest, rsvpStatus: value, entree: '' }
           }
+
           return { ...guest, rsvpStatus: value }
         }
+
         return guest
       })
     )

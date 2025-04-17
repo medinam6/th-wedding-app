@@ -137,7 +137,7 @@ const GuestListManager = () => {
         console.log(`Processing ${result.successfulRows} rows...`)
 
         let successCount = 0
-        let failedGuests = []
+        const failedGuests = []
 
         for (const guest of result.guests) {
           try {

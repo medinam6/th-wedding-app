@@ -85,6 +85,7 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
         ...updatedChildren[index],
         [field]: value,
       }
+
       return {
         ...prev,
         children: updatedChildren,
