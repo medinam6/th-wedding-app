@@ -40,8 +40,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
     rsvpStatus: 'No Response',
     children: [],
     diet: '',
-    song: '',
-    email: '',
+    song: '',s
     phoneNumber: '',
     address: {
       street1: '',
@@ -848,20 +847,6 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Email */}
-                <div>
-                  <label
-                    className="block text-xs sm:text-sm font-pop text-black"
-                    style={{ lineHeight: '2.25em', letterSpacing: '1px' }}
-                  >
-                    EMAIL
-                  </label>
-                  <Input
-                    value={guestData.email}
-                    onChange={e => handleInputChange('email', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                  />
-                </div>
                 {/* Phone Number */}
                 <div>
                   <label

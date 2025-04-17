@@ -363,14 +363,8 @@ const GuestListManager = () => {
           </div>
           <div>
             <p className="text-gray-400">Phone:</p>
-            <p className={guest?.phoneNumber ? 'text-white' : 'text-red-500'}>
+            <p className={'text-white'}>
               {guest?.phoneNumber ? formatPhoneNumber(guest.phoneNumber) : 'No Phone Number'}
-            </p>
-          </div>
-          <div>
-            <p className="text-gray-400">Email:</p>
-            <p className={guest?.email ? 'text-white' : 'text-red-500'}>
-              {guest?.email || 'No Email'}
             </p>
           </div>
           <div className="col-span-2">
@@ -511,7 +505,7 @@ const GuestListManager = () => {
                       <tr className="border-b border-gray-200">
                         <th className="text-left p-2 text-white font-pop">Name</th>
                         <th className="text-left p-2 text-white font-pop">No. in Party</th>
-                        <th className="text-left p-2 text-white font-pop">Email & Phone</th>
+                        <th className="text-left p-2 text-white font-pop">Phone</th>
                         <th className="text-left p-2 text-white font-pop">Address</th>
                         <th className="text-left p-2 text-white font-pop">RSVP Status</th>
                         <th className="text-left p-2 text-white font-pop">Last Updated</th>
@@ -534,11 +528,7 @@ const GuestListManager = () => {
                           </td>
                           <td className="p-2 font-pop text-white">{guest.totalInParty}</td>
                           <td className="p-2 font-pop">
-                            <span className={guest?.email ? 'text-white' : 'text-red-500'}>
-                              {guest?.email || 'No Email'}
-                            </span>
-                            <br />
-                            <span className={guest?.phoneNumber ? 'text-white' : 'text-red-500'}>
+                            <span className={'text-white'}>
                               {guest?.phoneNumber
                                 ? formatPhoneNumber(guest.phoneNumber)
                                 : 'No Phone Number'}

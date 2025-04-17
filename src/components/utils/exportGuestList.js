@@ -18,7 +18,6 @@ export const exportGuestListToCSV = guests => {
       'Partner RSVP': guest.partner?.rsvpStatus || '',
       'Partner Entree': guest.partner?.entree || '',
       // Contact
-      Email: guest.email || '',
       'Phone Number': guest.phoneNumber || '',
       'Street Address': guest.address.street1 || '',
       'Street Address (line 2)': guest.address.street2 || '',
@@ -50,6 +49,7 @@ export const exportGuestListToCSV = guests => {
         headers
           .map(header => {
             const cell = row[header]?.toString() || ''
+
             // Escape quotes and wrap in quotes to handle commas and special characters
             return `"${cell.replace(/"/g, '""')}"`
           })
@@ -79,6 +79,7 @@ export const exportGuestListToCSV = guests => {
     return true
   } catch (error) {
     console.error('Error exporting guest list:', error)
+
     return false
   }
 }

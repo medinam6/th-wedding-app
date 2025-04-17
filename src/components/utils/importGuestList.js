@@ -14,6 +14,7 @@ const transformToGuestFormat = row => {
     childColumns.sort((a, b) => {
       const numA = parseInt(a.match(/\d+/)[0])
       const numB = parseInt(b.match(/\d+/)[0])
+
       return numA - numB
     })
 
@@ -34,6 +35,7 @@ const transformToGuestFormat = row => {
             rsvpStatus: 'No Response',
           }
         }
+
         return null
       })
       .filter(Boolean) // Remove null entries
@@ -54,7 +56,6 @@ const transformToGuestFormat = row => {
             rsvpStatus: 'No Response',
           }
         : null,
-      email: row['Email Address'] || '',
       phoneNumber: row['Phone Number'] || '',
       address: {
         street1: row['Street Address'],
@@ -69,6 +70,7 @@ const transformToGuestFormat = row => {
     }
   } catch (error) {
     console.error('Error transforming row:', row, error)
+
     return null
   }
 }
@@ -90,6 +92,7 @@ const calculateTotalParty = (row, children) => {
 // Validate required fields
 const validateGuest = guest => {
   const required = ['firstName', 'lastName']
+
   return required.every(field => guest[field] && guest[field].trim() !== '')
 }
 
@@ -144,6 +147,7 @@ const parseExcel = async file => {
       headers.forEach((header, index) => {
         obj[header] = row[index]
       })
+
       return obj
     })
 

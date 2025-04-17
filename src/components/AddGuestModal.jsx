@@ -27,7 +27,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
     partner: null,
     rsvpStatus: 'No Response',
     children: [],
-    email: '',
     phoneNumber: '',
     address: {
       street1: '',
@@ -40,7 +39,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
   })
 
   const [showPartner, setShowPartner] = useState(false)
-  const [showChildren, setShowChildren] = useState(false)
   const [showAddress, setShowAddress] = useState(false)
   const [showContact, setShowContact] = useState(false)
 
@@ -96,7 +94,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
 
   const handleAddChild = () => {
     if (showPartner) {
-      setShowChildren(true)
       setGuestData(prev => ({
         ...prev,
         children: [
@@ -114,7 +111,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
   }
 
   const handleRemoveChild = index => {
-    setShowChildren(false)
     setGuestData(prev => ({
       ...prev,
       children: prev.children.filter((_, i) => i !== index),
@@ -127,7 +123,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
       partner: null,
     }))
     setShowPartner(false)
-    setShowChildren(false)
   }
 
   const handlePhoneNumberChange = e => {
@@ -143,7 +138,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
       suffix: '',
       rsvpStatus: 'No Response',
       partner: null,
-      email: '',
       phoneNumber: '',
       address: {
         street1: '',
@@ -155,7 +149,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
       },
     })
     setShowPartner(false)
-    setShowChildren(false)
     setShowAddress(false)
     setShowContact(false)
   }
@@ -175,7 +168,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
     onSubmit(finalGuestData)
     resetForm()
     setShowPartner(false)
-    setShowChildren(false)
     setShowAddress(false)
     setShowContact(false)
     onClose()
@@ -995,7 +987,7 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                 onClick={() => setShowContact(!showContact)}
                 className="w-full flex items-center justify-between py-2 text-left"
               >
-                <span className="text-base sm:text-lg font-pop text-black">Email & Mobile</span>
+                <span className="text-base sm:text-lg font-pop text-black">Mobile</span>
                 <span
                   className="text-2xl sm:text-3xl font-pop text-black"
                   style={{
@@ -1014,21 +1006,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               className={`transition-all duration-200 overflow-hidden ${showContact ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <div className="space-y-4 pt-1 pl-1 py-1 pr-1">
-                {/* Email & Phone - Mobile */}
-                <div className="sm:hidden space-y-3">
-                  <div>
-                    <label
-                      className="block text-xs font-pop text-black"
-                      style={{ lineHeight: '2em', letterSpacing: '1px' }}
-                    >
-                      EMAIL
-                    </label>
-                    <Input
-                      value={guestData.email}
-                      onChange={e => handleInputChange('email', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                    />
-                  </div>
                   <div>
                     <label
                       className="block text-xs font-pop text-black"
@@ -1044,38 +1021,6 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
                     />
                   </div>
                 </div>
-
-                {/* Email & Phone - Desktop */}
-                <div className="hidden sm:grid sm:grid-cols-2 sm:gap-4">
-                  <div>
-                    <label
-                      className="block text-sm font-pop text-black"
-                      style={{ lineHeight: '2.25em', letterSpacing: '1px' }}
-                    >
-                      EMAIL
-                    </label>
-                    <Input
-                      value={guestData.email}
-                      onChange={e => handleInputChange('email', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block text-sm font-pop text-black"
-                      style={{ lineHeight: '2.25em', letterSpacing: '1px' }}
-                    >
-                      MOBILE
-                    </label>
-                    <Input
-                      value={guestData.phoneNumber}
-                      onChange={handlePhoneNumberChange}
-                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                      maxLength={14}
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Buttons */}

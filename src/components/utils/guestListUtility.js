@@ -23,6 +23,7 @@ export const getTotalPartySize = guestData => {
   if (guestData.children && guestData.children.length > 0) {
     size += guestData.children.length
   }
+
   return size
 }
 
@@ -198,6 +199,7 @@ export const extractGuestsIntoArray = guestData => {
       })
     })
   }
+
   return guests
 }
 
@@ -290,6 +292,7 @@ export const entreeOptions = [
 
 export const getRsvpStyling = status => {
   const statusOption = rsvpStatuses.find(option => option.value === status)
+
   return {
     textColor: statusOption?.color || 'text-black',
   }
