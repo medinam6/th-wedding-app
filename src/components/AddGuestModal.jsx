@@ -1006,21 +1006,21 @@ const AddGuestModal = ({ isOpen, onClose, onSubmit }) => {
               className={`transition-all duration-200 overflow-hidden ${showContact ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <div className="space-y-4 pt-1 pl-1 py-1 pr-1">
-                  <div>
-                    <label
-                      className="block text-xs font-pop text-black"
-                      style={{ lineHeight: '2em', letterSpacing: '1px' }}
-                    >
-                      MOBILE
-                    </label>
-                    <Input
-                      value={guestData.phoneNumber}
-                      onChange={handlePhoneNumberChange}
-                      className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
-                      maxLength={14}
-                    />
-                  </div>
+                <div>
+                  <label
+                    className="block text-xs font-pop text-black"
+                    style={{ lineHeight: '2em', letterSpacing: '1px' }}
+                  >
+                    MOBILE
+                  </label>
+                  <Input
+                    value={guestData.phoneNumber}
+                    onChange={handlePhoneNumberChange}
+                    className="w-full border border-gray-300 rounded-md p-2 bg-white focus:ring-black text-black"
+                    maxLength={14}
+                  />
                 </div>
+              </div>
             </div>
 
             {/* Buttons */}

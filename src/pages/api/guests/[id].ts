@@ -12,7 +12,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const data = await fs.readFile(DATA_FILE, 'utf8')
         const guests = JSON.parse(data)
-        const guestIndex = guests.findIndex((g: any) => g.id === id)
+        const guestIndex = guests.findIndex(
+          (g: { id: string | string[] | undefined }) => g.id === id
+        )
 
         if (guestIndex === -1) {
           return res.status(404).json({ error: 'Guest not found' })
@@ -33,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.status(200).json(updatedGuest)
       } catch (error) {
+        console.error('Error updating guest:', error)
         res.status(500).json({ error: 'Failed to update guest' })
       }
       break

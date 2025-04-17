@@ -40,11 +40,11 @@ clientPromise
     console.log('Successfully connected to MongoDB')
 
     // Add event listeners for connection pool monitoring
-    client.on('connectionPoolCreated', event => {
+    client.on('connectionPoolCreated', () => {
       console.log('Connection pool created')
     })
 
-    client.on('connectionPoolClosed', event => {
+    client.on('connectionPoolClosed', () => {
       console.log('Connection pool closed')
     })
   })

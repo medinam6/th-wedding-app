@@ -250,7 +250,6 @@ const GuestListManager = () => {
   if (rsvpStatus !== 'All') {
     sortedGuests = sortGuestList(filteredGuestsByRSVPStatus)
   }
-  
 
   const totalGuests = guests.reduce((sum, guest) => sum + guest.totalInParty, 0)
 
@@ -454,7 +453,9 @@ const GuestListManager = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className={`${isMobileView ? 'flex-col space-y-2' : 'flex items-center gap-4 w-[800px]'}`}>
+              <div
+                className={`${isMobileView ? 'flex-col space-y-2' : 'flex items-center gap-4 w-[800px]'}`}
+              >
                 <div className="flex-1">
                   <Input
                     type="text"
@@ -465,24 +466,33 @@ const GuestListManager = () => {
                   />
                 </div>
                 <div className="w-[200px]">
-                  <Select
-                    value={rsvpStatus}
-                    onValueChange={value => setRsvpStatus(value)}
-                  >
+                  <Select value={rsvpStatus} onValueChange={value => setRsvpStatus(value)}>
                     <SelectTrigger className="w-full border border-gray-300 rounded-md p-2 bg-white text-black">
                       <SelectValue placeholder="Select..." />
                     </SelectTrigger>
                     <SelectContent className="w-[200px] bg-white border border-gray-300 shadow-md">
-                      <SelectItem value="All" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                      <SelectItem
+                        value="All"
+                        className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black"
+                      >
                         All
                       </SelectItem>
-                      <SelectItem value="Attending" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                      <SelectItem
+                        value="Attending"
+                        className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black"
+                      >
                         Attending
                       </SelectItem>
-                      <SelectItem value="Declined" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                      <SelectItem
+                        value="Declined"
+                        className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black"
+                      >
                         Declined
                       </SelectItem>
-                      <SelectItem value="No Response" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                      <SelectItem
+                        value="No Response"
+                        className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black"
+                      >
                         No Response
                       </SelectItem>
                     </SelectContent>
@@ -541,11 +551,15 @@ const GuestListManager = () => {
                       <thead>
                         <tr className="border-b border-gray-200">
                           <th className="w-[25%] text-left p-2 text-white font-pop">Name</th>
-                          <th className="w-[10%] text-left p-2 text-white font-pop">No. in Party</th>
+                          <th className="w-[10%] text-left p-2 text-white font-pop">
+                            No. in Party
+                          </th>
                           <th className="w-[15%] text-left p-2 text-white font-pop">Phone</th>
                           <th className="w-[20%] text-left p-2 text-white font-pop">Address</th>
                           <th className="w-[15%] text-left p-2 text-white font-pop">RSVP Status</th>
-                          <th className="w-[10%] text-left p-2 text-white font-pop">Last Updated</th>
+                          <th className="w-[10%] text-left p-2 text-white font-pop">
+                            Last Updated
+                          </th>
                           <th className="w-[5%] text-left p-2 text-white font-pop">Actions</th>
                         </tr>
                       </thead>

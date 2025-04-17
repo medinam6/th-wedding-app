@@ -18,6 +18,7 @@ export default async function handler(req, res) {
           .toArray()
         res.status(200).json(guests)
       } catch (error) {
+        console.error('Error fetching guests:', error)
         res.status(500).json({ error: 'Failed to fetch guests' })
       }
       break
@@ -31,13 +32,14 @@ export default async function handler(req, res) {
         const result = await collection.insertOne(newGuest)
         res.status(201).json(result)
       } catch (error) {
+        console.error('Error adding guest:', error)
         res.status(500).json({ error: 'Failed to add guest' })
       }
       break
 
     case 'PUT':
       try {
-        const { id, _id, ...updateData } = req.body
+        const { id, ...updateData } = req.body
         console.log('Request body:', req.body)
         console.log('Update Data:', updateData)
         console.log('ID:', id)
@@ -68,6 +70,7 @@ export default async function handler(req, res) {
         )
         res.status(200).json(result)
       } catch (error) {
+        console.error('Error updating guest deletion status:', error)
         res.status(500).json({ error: 'Failed to update guest deletion status' })
       }
       break
@@ -81,6 +84,7 @@ export default async function handler(req, res) {
         })
         res.status(200).json(result)
       } catch (error) {
+        console.error('Error deleting guest:', error)
         res.status(500).json({ error: 'Failed to delete guest' })
       }
       break
