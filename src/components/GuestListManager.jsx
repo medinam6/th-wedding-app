@@ -1,109 +1,109 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Upload, Download, Edit, Trash2, UserPlus, Check, X, Minus, Menu } from 'lucide-react';
-import AddGuestModal from './AddGuestModal';
-import EditGuestModal from './EditGuestModal';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
+import React, { useState, useEffect, useRef } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Upload, Download, Edit, Trash2, UserPlus, Check, X, Minus, Menu } from 'lucide-react'
+import AddGuestModal from './AddGuestModal'
+import EditGuestModal from './EditGuestModal'
+import DeleteConfirmationModal from './DeleteConfirmationModal'
 import {
   formatPhoneNumber,
   formatGuestNamesInTable,
   countRsvpStatuses,
-  sortGuestList
-} from './utils/guestListUtility';
-import exportGuestListToCSV from './utils/exportGuestList';
+  sortGuestList,
+} from './utils/guestListUtility'
+import exportGuestListToCSV from './utils/exportGuestList'
 import importGuests from './utils/importGuestList'
 
 const GuestListManager = () => {
-  const [guests, setGuests] = useState([]);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingGuest, setEditingGuest] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [guestToDelete, setGuestToDelete] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isMobileView, setIsMobileView] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const fileInputRef = useRef(null);
+  const [guests, setGuests] = useState([])
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [editingGuest, setEditingGuest] = useState(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [guestToDelete, setGuestToDelete] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isMobileView, setIsMobileView] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const fileInputRef = useRef(null)
 
   // Check if we're in mobile view
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768);
-    };
+      setIsMobileView(window.innerWidth < 768)
+    }
 
     // Set initial value
-    handleResize();
+    handleResize()
 
     // Add event listener
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize)
 
     // Clean up
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const fetchGuests = async () => {
     try {
-      const response = await fetch('api/guestList');
+      const response = await fetch('api/guestList')
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response', errorText);
-        throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+        const errorText = await response.text()
+        console.error('Error response', errorText)
+        throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`)
       }
 
-      const data = await response.json();
+      const data = await response.json()
       // Filter out soft-deleted guests
-      const activeGuests = Array.isArray(data) ? data.filter(guest => !guest.isDeleted) : [];
-      setGuests(sortGuestList(activeGuests));
+      const activeGuests = Array.isArray(data) ? data.filter(guest => !guest.isDeleted) : []
+      setGuests(sortGuestList(activeGuests))
     } catch (error) {
-      console.error('Detailed fetch error', error);
-      setGuests([]);
+      console.error('Detailed fetch error', error)
+      setGuests([])
     }
-  };
+  }
 
-  const handleAddGuest = async (guestData) => {
+  const handleAddGuest = async guestData => {
     try {
       const response = await fetch('/api/guestList', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(guestData)
-      });
+        body: JSON.stringify(guestData),
+      })
       if (response.ok) {
-        fetchGuests(); // Refresh the list
+        fetchGuests() // Refresh the list
       }
     } catch (error) {
-      console.error('Error adding guest:', error);
+      console.error('Error adding guest:', error)
     }
-  };
+  }
 
   // Update existing guest
-  const handleUpdateGuest = async (guestData) => {
-    console.log("Sending data to API:", guestData);
+  const handleUpdateGuest = async guestData => {
+    console.log('Sending data to API:', guestData)
     try {
       const response = await fetch('/api/guestList', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: guestData._id,
-          ...guestData
-        })
-      });
+          ...guestData,
+        }),
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update guest');
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update guest')
       }
 
-      console.log("Guest updated successfully");
-      fetchGuests(); // Refresh the list
+      console.log('Guest updated successfully')
+      fetchGuests() // Refresh the list
     } catch (error) {
-      console.error('Error updating guest:', error);
+      console.error('Error updating guest:', error)
     }
-  };
+  }
 
   // Soft Delete Guest
-  const handleDeleteGuest = async (id) => {
+  const handleDeleteGuest = async id => {
     try {
       const response = await fetch(`/api/guestList`, {
         method: 'PATCH',
@@ -112,74 +112,83 @@ const GuestListManager = () => {
           id,
           isDeleted: true,
           lastUpdated: new Date().toISOString(),
-        })
-      });
+        }),
+      })
       if (response.ok) {
-        fetchGuests(); // Refresh the list
-        setGuestToDelete(null); // Clear the selected guest
-        setIsDeleteModalOpen(false);
+        fetchGuests() // Refresh the list
+        setGuestToDelete(null) // Clear the selected guest
+        setIsDeleteModalOpen(false)
       }
     } catch (error) {
-      console.error('Error deleting guest:', error);
+      console.error('Error deleting guest:', error)
     }
-  };
+  }
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+  const handleFileUpload = async event => {
+    const file = event.target.files[0]
+    if (!file) return
 
     try {
-      const result = await importGuests(file);
+      const result = await importGuests(file)
 
       if (result.success) {
-        console.log(`Processing ${result.successfulRows} rows...`);
+        console.log(`Processing ${result.successfulRows} rows...`)
 
-        let successCount = 0;
-        let failedGuests = [];
+        let successCount = 0
+        let failedGuests = []
 
         for (const guest of result.guests) {
           try {
-            await handleAddGuest(guest);
-            successCount++;
+            await handleAddGuest(guest)
+            successCount++
           } catch (error) {
             failedGuests.push({
               name: `${guest.firstName} ${guest.lastName}`,
-              error: error.message
-            });
-            console.error('Error adding guest:', guest, error);
+              error: error.message,
+            })
+            console.error('Error adding guest:', guest, error)
           }
         }
 
-        let message = `Import complete:\n${successCount} guests added successfully`;
+        let message = `Import complete:\n${successCount} guests added successfully`
         if (failedGuests.length > 0) {
-          message += `\n${failedGuests.length} guests failed to add:`;
+          message += `\n${failedGuests.length} guests failed to add:`
           failedGuests.forEach(guest => {
-            message += `\n- ${guest.name}`;
-          });
+            message += `\n- ${guest.name}`
+          })
         }
 
-        alert(message);
+        alert(message)
       } else {
-        alert(`Error importing guests: ${result.error}`);
+        alert(`Error importing guests: ${result.error}`)
       }
     } catch (error) {
-      console.error('Error importing file:', error);
-      alert('There was an error importing the file. Please try again.');
+      console.error('Error importing file:', error)
+      alert('There was an error importing the file. Please try again.')
     }
-  };
-
+  }
 
   function formatGuestAddressInTable(address) {
     if (!address) {
-      return <span className="text-red-500">No Address</span>;
+      return <span className="text-red-500">No Address</span>
     }
 
-    const { street1, street2, city, state, zipCode } = address;
+    const { street1, street2, city, state, zipCode } = address
 
     return (
       <>
-        {street1 && <span>{street1}<br /></span>}
-        {street2 && <span>{street2}<br /></span>}
+        {street1 && (
+          <span>
+            {street1}
+            <br />
+          </span>
+        )}
+        {street2 && (
+          <span>
+            {street2}
+            <br />
+          </span>
+        )}
         {(city || state || zipCode) && (
           <span>
             {city && `${city}, `}
@@ -188,91 +197,95 @@ const GuestListManager = () => {
           </span>
         )}
       </>
-    );
+    )
   }
 
-  const getRSVPStatuses = (guest) => {
-    const statuses = [];
+  const getRSVPStatuses = guest => {
+    const statuses = []
 
     if (guest.rsvpStatus) {
-      statuses.push(guest.rsvpStatus);
+      statuses.push(guest.rsvpStatus)
     }
 
     if (guest.partner?.rsvpStatus) {
-      statuses.push(guest.partner.rsvpStatus);
+      statuses.push(guest.partner.rsvpStatus)
     }
 
     if (Array.isArray(guest.children)) {
       guest.children.forEach(child => {
         if (child.rsvpStatus) {
-          statuses.push(child.rsvpStatus);
+          statuses.push(child.rsvpStatus)
         }
-      });
+      })
     }
 
-    return statuses;
-  };
+    return statuses
+  }
 
   function formatDate(dateString) {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
 
     const shortDate = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit'
-    });
+      day: '2-digit',
+    })
 
-    return shortDate;
+    return shortDate
   }
 
-  const filteredGuests = guests.filter(guest =>
-    `${guest.firstName} ${guest.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    `${guest.partner?.firstName || ''} ${guest.partner?.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredGuests = guests.filter(
+    guest =>
+      `${guest.firstName} ${guest.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${guest.partner?.firstName || ''} ${guest.partner?.lastName || ''}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+  )
 
-  const sortedGuests = sortGuestList(filteredGuests);
+  const sortedGuests = sortGuestList(filteredGuests)
 
-  const totalGuests = guests.reduce((sum, guest) => sum + guest.totalInParty, 0);
+  const totalGuests = guests.reduce((sum, guest) => sum + guest.totalInParty, 0)
 
   // Fetch guest list on component mount
   useEffect(() => {
     const fetchGuestList = async () => {
       try {
-        const response = await fetch('/api/guestList');
-        console.log('API Response:', response);
+        const response = await fetch('/api/guestList')
+        console.log('API Response:', response)
 
         if (!response.ok) {
           // Try to read the error details
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+          const errorText = await response.text()
+          console.error('Error response:', errorText)
+          throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`)
         }
 
-        const data = await response.json();
-        setGuests(Array.isArray(data) ? data : []);
+        const data = await response.json()
+        setGuests(Array.isArray(data) ? data : [])
       } catch (error) {
-        console.error('Detailed fetch error:', error);
-        setGuests([]);
+        console.error('Detailed fetch error:', error)
+        setGuests([])
       }
-    };
+    }
 
-    fetchGuestList();
-  }, []);
+    fetchGuestList()
+  }, [])
 
   // Mobile card view of a guest
   const GuestCard = ({ guest }) => {
-    const primaryGuestName = `${guest.title || ''} ${guest.firstName || ''} ${guest.lastName || ''} ${guest.suffix || ''}`.trim();
+    const primaryGuestName =
+      `${guest.title || ''} ${guest.firstName || ''} ${guest.lastName || ''} ${guest.suffix || ''}`.trim()
 
     // Get additional party members
-    const additionalPartyMembers = [];
+    const additionalPartyMembers = []
 
     // Add partner's name if it exists
     if (guest.partner?.firstName || guest.partner?.lastName) {
       additionalPartyMembers.push({
         name: `${guest.partner.title || ''} ${guest.partner.firstName || ''} ${guest.partner.lastName || ''}`.trim(),
         type: 'partner',
-        rsvpStatus: guest.partner.rsvpStatus
-      });
+        rsvpStatus: guest.partner.rsvpStatus,
+      })
     }
 
     // Add children's names if they exist
@@ -282,10 +295,10 @@ const GuestListManager = () => {
           additionalPartyMembers.push({
             name: `${child.firstName || ''} ${child.lastName || ''}`.trim(),
             type: 'child',
-            rsvpStatus: child.rsvpStatus
-          });
+            rsvpStatus: child.rsvpStatus,
+          })
         }
-      });
+      })
     }
 
     return (
@@ -293,8 +306,10 @@ const GuestListManager = () => {
         <div className="flex justify-between items-start mb-2">
           <div>
             <div className="flex items-center">
-              {guest.rsvpStatus === "Attending" && <Check className="w-3 h-3 mr-1 text-green-500" />}
-              {guest.rsvpStatus === "Declined" && <X className="w-3 h-3 mr-1 text-red-500" />}
+              {guest.rsvpStatus === 'Attending' && (
+                <Check className="w-3 h-3 mr-1 text-green-500" />
+              )}
+              {guest.rsvpStatus === 'Declined' && <X className="w-3 h-3 mr-1 text-red-500" />}
               <h3 className="font-bold text-white">{primaryGuestName}</h3>
             </div>
 
@@ -303,8 +318,12 @@ const GuestListManager = () => {
               <div className="mt-1 border-gray-600">
                 {additionalPartyMembers.map((member, index) => (
                   <div key={index} className="flex items-center text-sm text-gray-300">
-                    {member.rsvpStatus === "Attending" && <Check className="w-3 h-3 inline mr-1 text-green-500" />}
-                    {member.rsvpStatus === "Declined" && <X className="w-3 h-3 inline mr-1 text-red-500" />}
+                    {member.rsvpStatus === 'Attending' && (
+                      <Check className="w-3 h-3 inline mr-1 text-green-500" />
+                    )}
+                    {member.rsvpStatus === 'Declined' && (
+                      <X className="w-3 h-3 inline mr-1 text-red-500" />
+                    )}
                     <span>{member.name}</span>
                   </div>
                 ))}
@@ -315,21 +334,21 @@ const GuestListManager = () => {
           <div className="flex space-x-2">
             <Button
               size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                const guestToEdit = guests.find(g => g._id === guest._id);
-                setEditingGuest(guestToEdit);
-                setIsEditModalOpen(true);
+              onClick={e => {
+                e.stopPropagation()
+                const guestToEdit = guests.find(g => g._id === guest._id)
+                setEditingGuest(guestToEdit)
+                setIsEditModalOpen(true)
               }}
             >
               <Edit className="w-4 h-4" />
             </Button>
             <Button
               size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                setGuestToDelete(guest);
-                setIsDeleteModalOpen(true);
+              onClick={e => {
+                e.stopPropagation()
+                setGuestToDelete(guest)
+                setIsDeleteModalOpen(true)
               }}
             >
               <Trash2 className="w-4 h-4" />
@@ -344,13 +363,13 @@ const GuestListManager = () => {
           </div>
           <div>
             <p className="text-gray-400">Phone:</p>
-            <p className={guest?.phoneNumber ? "text-white" : "text-red-500"}>
-              {guest?.phoneNumber ? formatPhoneNumber(guest.phoneNumber) : "No Phone Number"}
+            <p className={guest?.phoneNumber ? 'text-white' : 'text-red-500'}>
+              {guest?.phoneNumber ? formatPhoneNumber(guest.phoneNumber) : 'No Phone Number'}
             </p>
           </div>
           <div>
             <p className="text-gray-400">Email:</p>
-            <p className={guest?.email ? "text-white" : "text-red-500"}>
+            <p className={guest?.email ? 'text-white' : 'text-red-500'}>
               {guest?.email || 'No Email'}
             </p>
           </div>
@@ -364,14 +383,16 @@ const GuestListManager = () => {
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <div className="space-y-8 px-4 md:px-0">
       <Card className="w-full max-w-full md:min-w-[1000px] md:max-w-[1200px]">
         <CardHeader className={`${isMobileView ? 'flex-col' : 'items-center justify-between'}`}>
-          <CardTitle className="font-pop text-2xl md:text-3xl text-white">Guest List Management</CardTitle>
+          <CardTitle className="font-pop text-2xl md:text-3xl text-white">
+            Guest List Management
+          </CardTitle>
 
           {/* Mobile menu button */}
           {isMobileView && (
@@ -384,8 +405,10 @@ const GuestListManager = () => {
           )}
 
           {/* Desktop buttons or Mobile expandable menu */}
-          <div className={`${isMobileView ? (showMobileMenu ? 'flex' : 'hidden') : 'flex'}
-                          ${isMobileView ? 'flex-col w-full space-y-2 mt-4' : 'gap-4'}`}>
+          <div
+            className={`${isMobileView ? (showMobileMenu ? 'flex' : 'hidden') : 'flex'}
+                          ${isMobileView ? 'flex-col w-full space-y-2 mt-4' : 'gap-4'}`}
+          >
             <>
               <input
                 type="file"
@@ -405,17 +428,21 @@ const GuestListManager = () => {
             <Button
               className={`text-white ${isMobileView ? 'w-full justify-center' : ''}`}
               onClick={() => {
-                const downloadSuccessful = exportGuestListToCSV(sortedGuests);
+                const downloadSuccessful = exportGuestListToCSV(sortedGuests)
                 if (!downloadSuccessful) {
-                  alert('There was an error exporting the guest list. Please try again.');
+                  alert('There was an error exporting the guest list. Please try again.')
                 }
-              }} >
+              }}
+            >
               <Download className="w-4 h-4 mr-2 text-white font-pop" />
               Export CSV
             </Button>
 
             {isMobileView && (
-              <Button onClick={() => setIsAddModalOpen(true)} className="w-full justify-center text-white">
+              <Button
+                onClick={() => setIsAddModalOpen(true)}
+                className="w-full justify-center text-white"
+              >
                 <UserPlus className="w-4 h-4 mr-2 text-white font-pop" />
                 Add Guests
               </Button>
@@ -430,7 +457,7 @@ const GuestListManager = () => {
                   type="text"
                   placeholder="Search guests..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="w-full font-pop text-white"
                 />
               </div>
@@ -493,24 +520,28 @@ const GuestListManager = () => {
                     </thead>
                     <tbody>
                       {sortedGuests.map(guest => (
-                        <tr key={guest.id}
+                        <tr
+                          key={guest.id}
                           className="border-b border-gray-200 hover:bg-gray-700/50 cursor-pointer transition-colors group"
                           onClick={() => {
-                            const guestToEdit = guests.find(g => g._id === guest._id);
-                            setEditingGuest(guestToEdit);
-                            setIsEditModalOpen(true);
-                          }}>
+                            const guestToEdit = guests.find(g => g._id === guest._id)
+                            setEditingGuest(guestToEdit)
+                            setIsEditModalOpen(true)
+                          }}
+                        >
                           <td className="p-2 divide-white font-pop text-white">
                             {formatGuestNamesInTable(guest)}
                           </td>
                           <td className="p-2 font-pop text-white">{guest.totalInParty}</td>
                           <td className="p-2 font-pop">
-                            <span className={guest?.email ? "text-white" : "text-red-500"}>
+                            <span className={guest?.email ? 'text-white' : 'text-red-500'}>
                               {guest?.email || 'No Email'}
                             </span>
                             <br />
-                            <span className={guest?.phoneNumber ? "text-white" : "text-red-500"}>
-                              {guest?.phoneNumber ? formatPhoneNumber(guest.phoneNumber) : "No Phone Number"}
+                            <span className={guest?.phoneNumber ? 'text-white' : 'text-red-500'}>
+                              {guest?.phoneNumber
+                                ? formatPhoneNumber(guest.phoneNumber)
+                                : 'No Phone Number'}
                             </span>
                           </td>
                           <td className="p-2 font-pop text-white">
@@ -522,18 +553,26 @@ const GuestListManager = () => {
                                 <div key={index}>
                                   {/* Icon display - hidden on row hover */}
                                   <div className="group-hover:hidden">
-                                    {status === "Attending" && <Check className="w-6 h-6 text-green-500" />}
-                                    {status === "Declined" && <X className="w-6 h-6 text-red-500" />}
-                                    {status === ("No Response" || "") && <Minus className="w-6 h-6 text-white" />}
+                                    {status === 'Attending' && (
+                                      <Check className="w-6 h-6 text-green-500" />
+                                    )}
+                                    {status === 'Declined' && (
+                                      <X className="w-6 h-6 text-red-500" />
+                                    )}
+                                    {status === ('No Response' || '') && (
+                                      <Minus className="w-6 h-6 text-white" />
+                                    )}
                                   </div>
 
                                   {/* Text display - shown on row hover */}
                                   <div className="hidden group-hover:block min-w-[100px]">
-                                    <span className={`
-                                      ${status === "Attending" ? "text-green-500" : ""}
-                                      ${status === "Declined" ? "text-red-500" : ""}
-                                      ${status === ("No Response" || "") ? "text-white" : ""}
-                                      `}>
+                                    <span
+                                      className={`
+                                      ${status === 'Attending' ? 'text-green-500' : ''}
+                                      ${status === 'Declined' ? 'text-red-500' : ''}
+                                      ${status === ('No Response' || '') ? 'text-white' : ''}
+                                      `}
+                                    >
                                       {status}
                                     </span>
                                   </div>
@@ -541,25 +580,27 @@ const GuestListManager = () => {
                               ))}
                             </div>
                           </td>
-                          <td className="p-2 font-pop text-white">{formatDate(guest.lastUpdated) || '-'}</td>
+                          <td className="p-2 font-pop text-white">
+                            {formatDate(guest.lastUpdated) || '-'}
+                          </td>
                           <td className="p-2 font-pop text-white">
                             <Button
                               size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                const guestToEdit = guests.find(g => g._id === guest._id);
-                                setEditingGuest(guestToEdit);
-                                setIsEditModalOpen(true);
+                              onClick={e => {
+                                e.stopPropagation()
+                                const guestToEdit = guests.find(g => g._id === guest._id)
+                                setEditingGuest(guestToEdit)
+                                setIsEditModalOpen(true)
                               }}
                             >
                               <Edit className="w-4 h-4" />
                             </Button>
                             <Button
                               size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setGuestToDelete(guest);
-                                setIsDeleteModalOpen(true);
+                              onClick={e => {
+                                e.stopPropagation()
+                                setGuestToDelete(guest)
+                                setIsDeleteModalOpen(true)
                               }}
                             >
                               <Trash2 className="w-4 h-4" />
@@ -573,8 +614,8 @@ const GuestListManager = () => {
               )}
             </>
           )}
-        </CardContent >
-      </Card >
+        </CardContent>
+      </Card>
       <AddGuestModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -583,8 +624,8 @@ const GuestListManager = () => {
       <EditGuestModal
         isOpen={isEditModalOpen}
         onClose={() => {
-          setIsEditModalOpen(false);
-          setEditingGuest(null);
+          setIsEditModalOpen(false)
+          setEditingGuest(null)
         }}
         onSubmit={handleUpdateGuest}
         guest={editingGuest}
@@ -592,17 +633,17 @@ const GuestListManager = () => {
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => {
-          setIsDeleteModalOpen(false);
-          setGuestToDelete(null);
+          setIsDeleteModalOpen(false)
+          setGuestToDelete(null)
         }}
         onConfirm={() => {
-          handleDeleteGuest(guestToDelete?._id);
-          setIsDeleteModalOpen(false);
+          handleDeleteGuest(guestToDelete?._id)
+          setIsDeleteModalOpen(false)
         }}
         guestName={guestToDelete ? `${guestToDelete.firstName} ${guestToDelete.lastName}` : ''}
       />
-    </div >
-  );
-};
+    </div>
+  )
+}
 
-export default GuestListManager;
+export default GuestListManager

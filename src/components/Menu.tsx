@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
 
 const NavMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname(); // Get current path
+  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname() // Get current path
 
   const menuList = [
     { name: 'Home Page', path: '/' },
@@ -16,8 +16,8 @@ const NavMenu = () => {
     { name: 'WEDDING PARTY', path: '/wedding-party' },
     { name: 'REGISTRY', path: '/registry' },
     { name: 'RSVP', path: '/rsvp' },
-    { name: 'FAQ', path: '/faq' }
-  ];
+    { name: 'FAQ', path: '/faq' },
+  ]
 
   return (
     <>
@@ -39,7 +39,7 @@ const NavMenu = () => {
       >
         <nav className="flex flex-col h-full pt-20">
           {menuList.map((item, index) => {
-            const isActive = pathname === item.path; // Check if the link is active
+            const isActive = pathname === item.path // Check if the link is active
 
             return (
               <Link key={item.name} href={item.path} onClick={() => setIsOpen(false)}>
@@ -56,7 +56,7 @@ const NavMenu = () => {
                   </span>
                 </div>
               </Link>
-            );
+            )
           })}
         </nav>
       </div>
@@ -68,7 +68,7 @@ const NavMenu = () => {
         />
       )}
     </>
-  );
-};
+  )
+}
 
-export default NavMenu;
+export default NavMenu

@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:fix": "eslint --fix .",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@eslint/js": "^9.9.0",

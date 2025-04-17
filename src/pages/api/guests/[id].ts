@@ -1,21 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { NextApiRequest, NextApiResponse } from 'next'
+import { promises as fs } from 'fs'
+import path from 'path'
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'guests.json');
+const DATA_FILE = path.join(process.cwd(), 'data', 'guests.json')
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+  const { id } = req.query
 
   switch (req.method) {
     case 'PATCH':
       try {
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        const guests = JSON.parse(data);
-        const guestIndex = guests.findIndex((g: any) => g.id === id);
+        const data = await fs.readFile(DATA_FILE, 'utf8')
+        const guests = JSON.parse(data)
+        const guestIndex = guests.findIndex((g: any) => g.id === id)
 
         if (guestIndex === -1) {
-          return res.status(404).json({ error: 'Guest not found' });
+          return res.status(404).json({ error: 'Guest not found' })
         }
 
         const updatedGuest = {
@@ -24,21 +24,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           rsvp: {
             ...guests[guestIndex].rsvp,
             lastUpdated: new Date().toISOString(),
-            lastUpdatedBy: 'admin'
-          }
-        };
+            lastUpdatedBy: 'admin',
+          },
+        }
 
-        guests[guestIndex] = updatedGuest;
-        await fs.writeFile(DATA_FILE, JSON.stringify(guests, null, 2));
+        guests[guestIndex] = updatedGuest
+        await fs.writeFile(DATA_FILE, JSON.stringify(guests, null, 2))
 
-        res.status(200).json(updatedGuest);
+        res.status(200).json(updatedGuest)
       } catch (error) {
-        res.status(500).json({ error: 'Failed to update guest' });
+        res.status(500).json({ error: 'Failed to update guest' })
       }
-      break;
+      break
 
     default:
-      res.setHeader('Allow', ['PATCH']);
-      res.status(405).end(`Method ${req.method} Not Allowed`);
+      res.setHeader('Allow', ['PATCH'])
+      res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }
