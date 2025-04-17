@@ -14,6 +14,7 @@ import {
 } from './utils/guestListUtility'
 import exportGuestListToCSV from './utils/exportGuestList'
 import importGuests from './utils/importGuestList'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select'
 
 const GuestListManager = () => {
   const [guests, setGuests] = useState([])
@@ -25,6 +26,7 @@ const GuestListManager = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [isMobileView, setIsMobileView] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [rsvpStatus, setRsvpStatus] = useState('All')
   const fileInputRef = useRef(null)
 
   // Check if we're in mobile view
@@ -242,7 +244,13 @@ const GuestListManager = () => {
         .includes(searchTerm.toLowerCase())
   )
 
-  const sortedGuests = sortGuestList(filteredGuests)
+  const filteredGuestsByRSVPStatus = filteredGuests.filter(guest => guest.rsvpStatus === rsvpStatus)
+
+  let sortedGuests = sortGuestList(filteredGuests)
+  if (rsvpStatus !== 'All') {
+    sortedGuests = sortGuestList(filteredGuestsByRSVPStatus)
+  }
+  
 
   const totalGuests = guests.reduce((sum, guest) => sum + guest.totalInParty, 0)
 
@@ -302,7 +310,7 @@ const GuestListManager = () => {
     }
 
     return (
-      <div className="border rounded-md p-4 mb-4 bg-gray-800 shadow">
+      <div className="w-full max-w-[calc(100vw-3rem)] border rounded-md p-4 mb-4 bg-gray-800 shadow">
         <div className="flex justify-between items-start mb-2">
           <div>
             <div className="flex items-center">
@@ -381,230 +389,260 @@ const GuestListManager = () => {
   }
 
   return (
-    <div className="space-y-8 px-4 md:px-0">
-      <Card className="w-full max-w-full md:min-w-[1000px] md:max-w-[1200px]">
-        <CardHeader className={`${isMobileView ? 'flex-col' : 'items-center justify-between'}`}>
-          <CardTitle className="font-pop text-2xl md:text-3xl text-white">
-            Guest List Management
-          </CardTitle>
+    <div className="space-y-8 px-4 md:px-0 p-40">
+      <Card className="w-full md:min-w-[calc(80vw-11rem)] md:max-w-[1100px]">
+        <div className="w-fulls">
+          <CardHeader className={`${isMobileView ? 'flex-col' : 'items-center justify-between'}`}>
+            <CardTitle className="font-pop text-2xl md:text-3xl text-white">
+              Guest List Management
+            </CardTitle>
 
-          {/* Mobile menu button */}
-          {isMobileView && (
-            <div className="flex justify-between items-center w-full mt-4">
-              <Button className="text-white" onClick={() => setShowMobileMenu(!showMobileMenu)}>
-                <Menu className="w-4 h-4 mr-2" />
-                Menu
-              </Button>
-            </div>
-          )}
+            {/* Mobile menu button */}
+            {isMobileView && (
+              <div className="flex justify-between items-center w-full mt-4">
+                <Button className="text-white" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+                  <Menu className="w-4 h-4 mr-2" />
+                  Menu
+                </Button>
+              </div>
+            )}
 
-          {/* Desktop buttons or Mobile expandable menu */}
-          <div
-            className={`${isMobileView ? (showMobileMenu ? 'flex' : 'hidden') : 'flex'}
-                          ${isMobileView ? 'flex-col w-full space-y-2 mt-4' : 'gap-4'}`}
-          >
-            <>
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept=".csv,.xlsx,.xls"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
+            {/* Desktop buttons or Mobile expandable menu */}
+            <div
+              className={`${isMobileView ? (showMobileMenu ? 'flex' : 'hidden') : 'flex'}
+                            ${isMobileView ? 'flex-col w-full space-y-2 mt-4' : 'gap-4'}`}
+            >
+              <>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept=".csv,.xlsx,.xls"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <Button
+                  className={`text-white ${isMobileView ? 'w-full justify-center' : ''}`}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload className="w-4 h-4 mr-2 text-white font-pop" />
+                  Upload CSV
+                </Button>
+              </>
               <Button
                 className={`text-white ${isMobileView ? 'w-full justify-center' : ''}`}
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => {
+                  const downloadSuccessful = exportGuestListToCSV(sortedGuests)
+                  if (!downloadSuccessful) {
+                    alert('There was an error exporting the guest list. Please try again.')
+                  }
+                }}
               >
-                <Upload className="w-4 h-4 mr-2 text-white font-pop" />
-                Upload CSV
+                <Download className="w-4 h-4 mr-2 text-white font-pop" />
+                Export CSV
               </Button>
-            </>
-            <Button
-              className={`text-white ${isMobileView ? 'w-full justify-center' : ''}`}
-              onClick={() => {
-                const downloadSuccessful = exportGuestListToCSV(sortedGuests)
-                if (!downloadSuccessful) {
-                  alert('There was an error exporting the guest list. Please try again.')
-                }
-              }}
-            >
-              <Download className="w-4 h-4 mr-2 text-white font-pop" />
-              Export CSV
-            </Button>
 
-            {isMobileView && (
-              <Button
-                onClick={() => setIsAddModalOpen(true)}
-                className="w-full justify-center text-white"
-              >
-                <UserPlus className="w-4 h-4 mr-2 text-white font-pop" />
-                Add Guests
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className={`${isMobileView ? 'flex-col space-y-2' : 'flex gap-4'}`}>
-              <div className="flex-1">
-                <Input
-                  type="text"
-                  placeholder="Search guests..."
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                  className="w-full font-pop text-white"
-                />
-              </div>
-
-              {/* Only show in desktop view as it's already in mobile menu */}
-              {!isMobileView && (
-                <Button onClick={() => setIsAddModalOpen(true)} className="text-white">
+              {isMobileView && (
+                <Button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="w-full justify-center text-white"
+                >
                   <UserPlus className="w-4 h-4 mr-2 text-white font-pop" />
                   Add Guests
                 </Button>
               )}
             </div>
-          </div>
-          <br />
-          {guests.length === 0 ? (
-            <div className="text-center py-8 text-white font-pop">
-              <p>No guest list uploaded yet.</p>
-              <p className="text-sm mt-2">Add a Guest or Upload a CSV file to get started.</p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className={`${isMobileView ? 'flex-col space-y-2' : 'flex items-center gap-4 w-[800px]'}`}>
+                <div className="flex-1">
+                  <Input
+                    type="text"
+                    placeholder="Search guests..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="w-full font-pop text-white"
+                  />
+                </div>
+                <div className="w-[200px]">
+                  <Select
+                    value={rsvpStatus}
+                    onValueChange={value => setRsvpStatus(value)}
+                  >
+                    <SelectTrigger className="w-full border border-gray-300 rounded-md p-2 bg-white text-black">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent className="w-[200px] bg-white border border-gray-300 shadow-md">
+                      <SelectItem value="All" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                        All
+                      </SelectItem>
+                      <SelectItem value="Attending" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                        Attending
+                      </SelectItem>
+                      <SelectItem value="Declined" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                        Declined
+                      </SelectItem>
+                      <SelectItem value="No Response" className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black">
+                        No Response
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Only show in desktop view as it's already in mobile menu */}
+                {!isMobileView && (
+                  <Button onClick={() => setIsAddModalOpen(true)} className="text-white">
+                    <UserPlus className="w-4 h-4 mr-2 text-white font-pop" />
+                    Add Guests
+                  </Button>
+                )}
+              </div>
             </div>
-          ) : (
-            <>
-              {/* Desktop stats display */}
-              {!isMobileView ? (
-                <div className="flex justify-between items-center w-full mb-4">
-                  <p className="font-pop text-white">
-                    Guest List: {totalGuests} Guests | {guests.length} Groups
-                  </p>
-                  <div className="text-right">{countRsvpStatuses(guests, isMobileView)}</div>
-                </div>
-              ) : (
-                <div className="items-left w-full mb-4">
-                  <p className="font-pop text-white text-sm">
-                    Guest List: {totalGuests} Guests | {guests.length} Groups
-                  </p>
-                  <div>{countRsvpStatuses(guests, isMobileView)}</div>
-                </div>
-              )}
+            <br />
+            {guests.length === 0 ? (
+              <div className="text-center py-8 text-white font-pop">
+                <p>No guest list uploaded yet.</p>
+                <p className="text-sm mt-2">Add a Guest or Upload a CSV file to get started.</p>
+              </div>
+            ) : (
+              <>
+                {/* Desktop stats display */}
+                {!isMobileView ? (
+                  <div className="flex justify-between items-center w-full mb-4">
+                    <p className="font-pop text-white">
+                      Guest List: {totalGuests} Guests | {guests.length} Groups
+                    </p>
+                    <div className="text-right">{countRsvpStatuses(guests, isMobileView)}</div>
+                  </div>
+                ) : (
+                  <div className="items-left w-full mb-4">
+                    <p className="font-pop text-white text-sm">
+                      Guest List: {totalGuests} Guests | {guests.length} Groups
+                    </p>
+                    <div>{countRsvpStatuses(guests, isMobileView)}</div>
+                  </div>
+                )}
 
-              {/* Mobile view: cards */}
-              {isMobileView ? (
-                <div className="mt-4">
-                  {sortedGuests.map(guest => (
-                    <GuestCard key={guest._id || guest.id} guest={guest} />
-                  ))}
-                </div>
-              ) : (
-                /* Desktop view: table */
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left p-2 text-white font-pop">Name</th>
-                        <th className="text-left p-2 text-white font-pop">No. in Party</th>
-                        <th className="text-left p-2 text-white font-pop">Phone</th>
-                        <th className="text-left p-2 text-white font-pop">Address</th>
-                        <th className="text-left p-2 text-white font-pop">RSVP Status</th>
-                        <th className="text-left p-2 text-white font-pop">Last Updated</th>
-                        <th className="text-left p-2 text-white font-pop">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                {/* Mobile view: cards */}
+                {isMobileView ? (
+                  <div className="w-[calc(100vw-5rem)] mx-auto mt-4">
+                    <div className="w-full">
                       {sortedGuests.map(guest => (
-                        <tr
-                          key={guest.id}
-                          className="border-b border-gray-200 hover:bg-gray-700/50 cursor-pointer transition-colors group"
-                          onClick={() => {
-                            const guestToEdit = guests.find(g => g._id === guest._id)
-                            setEditingGuest(guestToEdit)
-                            setIsEditModalOpen(true)
-                          }}
-                        >
-                          <td className="p-2 divide-white font-pop text-white">
-                            {formatGuestNamesInTable(guest)}
-                          </td>
-                          <td className="p-2 font-pop text-white">{guest.totalInParty}</td>
-                          <td className="p-2 font-pop">
-                            <span className={'text-white'}>
-                              {guest?.phoneNumber
-                                ? formatPhoneNumber(guest.phoneNumber)
-                                : 'No Phone Number'}
-                            </span>
-                          </td>
-                          <td className="p-2 font-pop text-white">
-                            {formatGuestAddressInTable(guest.address)}
-                          </td>
-                          <td className="font-pop text-white text-center">
-                            <div className="flex flex-col items-center">
-                              {getRSVPStatuses(guest).map((status, index) => (
-                                <div key={index}>
-                                  {/* Icon display - hidden on row hover */}
-                                  <div className="group-hover:hidden">
-                                    {status === 'Attending' && (
-                                      <Check className="w-6 h-6 text-green-500" />
-                                    )}
-                                    {status === 'Declined' && (
-                                      <X className="w-6 h-6 text-red-500" />
-                                    )}
-                                    {status === ('No Response' || '') && (
-                                      <Minus className="w-6 h-6 text-white" />
-                                    )}
-                                  </div>
-
-                                  {/* Text display - shown on row hover */}
-                                  <div className="hidden group-hover:block min-w-[100px]">
-                                    <span
-                                      className={`
-                                      ${status === 'Attending' ? 'text-green-500' : ''}
-                                      ${status === 'Declined' ? 'text-red-500' : ''}
-                                      ${status === ('No Response' || '') ? 'text-white' : ''}
-                                      `}
-                                    >
-                                      {status}
-                                    </span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </td>
-                          <td className="p-2 font-pop text-white">
-                            {formatDate(guest.lastUpdated) || '-'}
-                          </td>
-                          <td className="p-2 font-pop text-white">
-                            <Button
-                              size="sm"
-                              onClick={e => {
-                                e.stopPropagation()
-                                const guestToEdit = guests.find(g => g._id === guest._id)
-                                setEditingGuest(guestToEdit)
-                                setIsEditModalOpen(true)
-                              }}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={e => {
-                                e.stopPropagation()
-                                setGuestToDelete(guest)
-                                setIsDeleteModalOpen(true)
-                              }}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </td>
-                        </tr>
+                        <div key={guest._id || guest.id} className="w-full">
+                          <GuestCard guest={guest} />
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
+                    </div>
+                  </div>
+                ) : (
+                  /* Desktop view: table */
+                  <div className="overflow-x-auto">
+                    <table className="w-full table-fixed">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="w-[25%] text-left p-2 text-white font-pop">Name</th>
+                          <th className="w-[10%] text-left p-2 text-white font-pop">No. in Party</th>
+                          <th className="w-[15%] text-left p-2 text-white font-pop">Phone</th>
+                          <th className="w-[20%] text-left p-2 text-white font-pop">Address</th>
+                          <th className="w-[15%] text-left p-2 text-white font-pop">RSVP Status</th>
+                          <th className="w-[10%] text-left p-2 text-white font-pop">Last Updated</th>
+                          <th className="w-[5%] text-left p-2 text-white font-pop">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sortedGuests.map(guest => (
+                          <tr
+                            key={guest.id}
+                            className="border-b border-gray-200 hover:bg-gray-700/50 cursor-pointer transition-colors group"
+                            onClick={() => {
+                              const guestToEdit = guests.find(g => g._id === guest._id)
+                              setEditingGuest(guestToEdit)
+                              setIsEditModalOpen(true)
+                            }}
+                          >
+                            <td className="p-2 divide-white font-pop text-white">
+                              {formatGuestNamesInTable(guest)}
+                            </td>
+                            <td className="p-2 font-pop text-white">{guest.totalInParty}</td>
+                            <td className="p-2 font-pop">
+                              <span className={'text-white'}>
+                                {guest?.phoneNumber
+                                  ? formatPhoneNumber(guest.phoneNumber)
+                                  : 'No Phone Number'}
+                              </span>
+                            </td>
+                            <td className="p-2 font-pop text-white">
+                              {formatGuestAddressInTable(guest.address)}
+                            </td>
+                            <td className="font-pop text-white text-center">
+                              <div className="flex flex-col items-center">
+                                {getRSVPStatuses(guest).map((status, index) => (
+                                  <div key={index}>
+                                    {/* Icon display - hidden on row hover */}
+                                    <div className="group-hover:hidden">
+                                      {status === 'Attending' && (
+                                        <Check className="w-6 h-6 text-green-500" />
+                                      )}
+                                      {status === 'Declined' && (
+                                        <X className="w-6 h-6 text-red-500" />
+                                      )}
+                                      {status === ('No Response' || '') && (
+                                        <Minus className="w-6 h-6 text-white" />
+                                      )}
+                                    </div>
+
+                                    {/* Text display - shown on row hover */}
+                                    <div className="hidden group-hover:block min-w-[100px]">
+                                      <span
+                                        className={`
+                                        ${status === 'Attending' ? 'text-green-500' : ''}
+                                        ${status === 'Declined' ? 'text-red-500' : ''}
+                                        ${status === ('No Response' || '') ? 'text-white' : ''}
+                                        `}
+                                      >
+                                        {status}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="p-2 font-pop text-white">
+                              {formatDate(guest.lastUpdated) || '-'}
+                            </td>
+                            <td className="p-2 font-pop text-white">
+                              <Button
+                                size="sm"
+                                onClick={e => {
+                                  e.stopPropagation()
+                                  const guestToEdit = guests.find(g => g._id === guest._id)
+                                  setEditingGuest(guestToEdit)
+                                  setIsEditModalOpen(true)
+                                }}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={e => {
+                                  e.stopPropagation()
+                                  setGuestToDelete(guest)
+                                  setIsDeleteModalOpen(true)
+                                }}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            )}
+          </CardContent>
+        </div>
       </Card>
       <AddGuestModal
         isOpen={isAddModalOpen}

@@ -40,7 +40,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
     rsvpStatus: 'No Response',
     children: [],
     diet: '',
-    song: '',s
+    song: '',
     phoneNumber: '',
     address: {
       street1: '',
@@ -53,7 +53,6 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
   })
 
   const [showPartner, setShowPartner] = useState(false)
-  const [showChildren, setShowChildren] = useState(false)
   const [guestArray, setGuestArray] = useState([])
 
   useEffect(() => {
@@ -71,7 +70,6 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
         children: guest.children || [],
       })
       setShowPartner(!!guest.partner)
-      setShowChildren(guest.children?.length > 0)
     }
   }, [guest])
 
@@ -127,7 +125,6 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
   const handleAddChild = () => {
     if (showPartner) {
-      setShowChildren(true)
       setGuestData(prev => ({
         ...prev,
         children: [
@@ -146,7 +143,6 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
   }
 
   const handleRemoveChild = index => {
-    setShowChildren(false)
     setGuestData(prev => ({
       ...prev,
       children: prev.children.filter((_, i) => i !== index),
@@ -159,7 +155,6 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
       partner: null,
     }))
     setShowPartner(false)
-    setShowChildren(false)
   }
 
   const handlePhoneNumberChange = e => {
