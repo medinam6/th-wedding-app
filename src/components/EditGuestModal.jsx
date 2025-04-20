@@ -221,7 +221,7 @@ const EditGuestModal = ({ isOpen, onClose, onSubmit, guest }) => {
 
         <form onSubmit={handleSubmit}>
           <Tabs defaultValue="guest-info" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-4">
+            <TabsList className="grid w-full grid-cols-3 mb-4 text-black">
               <TabsTrigger value="guest-info" className="text-xs sm:text-sm">
                 Guest Info
               </TabsTrigger>
