@@ -83,12 +83,18 @@ const GuestListManager = () => {
   const handleUpdateGuest = async guestData => {
     console.log('Sending data to API:', guestData)
     try {
+      const { _id, ...updateData } = guestData
+      const dataToSubmit = {
+        ...updateData,
+        lastUpdated: new Date().toISOString(),
+      }
+
       const response = await fetch('/api/guestList', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: guestData._id,
-          ...guestData,
+          id: _id,
+          ...dataToSubmit,
         }),
       })
 
