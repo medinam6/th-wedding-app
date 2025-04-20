@@ -48,7 +48,14 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Missing ID parameter' })
         }
 
-        const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateData })
+        // Remove _id from the update data if it exists
+        const { _id, ...cleanUpdateData } = updateData
+        void _id // Explicitly ignore the _id value
+
+        const result = await collection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: cleanUpdateData }
+        )
 
         if (result.matchedCount === 0) {
           return res.status(404).json({ error: 'Guest not found' })
