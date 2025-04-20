@@ -26,7 +26,7 @@ const WeddingParty = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       {[
         { name: 'Estevan Enriquez', role: 'Best Man', image: '/estevan.jpeg' },
-        { name: 'Aries Caytuero', role: 'Groomsman', image: '/estevan.jpeg' },
+        { name: 'Aries Caytuero', role: 'Groomsman', image: '/aries.jpeg' },
         { name: 'Bob Morgan', role: 'Groomsman', image: '/estevan.jpeg' },
         { name: 'Frankie Valera', role: 'Groomsman', image: '/frankie.jpeg' },
       ].map(member => (
