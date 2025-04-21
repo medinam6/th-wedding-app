@@ -17,7 +17,7 @@ export const Faq = () => {
       <CardContent>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="rsvp-date">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               What date should I RSVP by?
             </AccordionTrigger>
             <AccordionContent>
@@ -30,7 +30,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="venue">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               What is the address of the wedding ceremony and reception venue?
             </AccordionTrigger>
             <AccordionContent>
@@ -43,7 +43,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="parking">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Is there parking?
             </AccordionTrigger>
             <AccordionContent>
@@ -54,7 +54,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="arrival-time">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               What time should I arrive at the ceremony?
             </AccordionTrigger>
             <AccordionContent>
@@ -68,7 +68,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="hotel-blocks">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Have you reserved blocks of rooms at the hotel?
             </AccordionTrigger>
             <AccordionContent>
@@ -77,7 +77,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="dress-code">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               What is the dress code for your wedding?
             </AccordionTrigger>
             <AccordionContent>
@@ -99,7 +99,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="photos">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Am I allowed to take photos during the ceremony?
             </AccordionTrigger>
             <AccordionContent>
@@ -117,7 +117,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="colors">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Are there any colors I should avoid wearing?
             </AccordionTrigger>
             <AccordionContent>
@@ -129,7 +129,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="plus-one">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Can I bring a plus one?
             </AccordionTrigger>
             <AccordionContent>
@@ -141,7 +141,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="bar">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Will there be an open bar?
             </AccordionTrigger>
             <AccordionContent>
@@ -153,7 +153,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="gifts">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Where should we bring/send our wedding gift?
             </AccordionTrigger>
             <AccordionContent>
@@ -165,7 +165,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="food">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               What type of food will be served at the wedding?
             </AccordionTrigger>
             <AccordionContent>
@@ -182,7 +182,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="location">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Is the wedding indoors or outdoors?
             </AccordionTrigger>
             <AccordionContent>
@@ -205,7 +205,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="airport">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               What&apos;s the best airport to use?
             </AccordionTrigger>
             <AccordionContent>
@@ -214,7 +214,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="children">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Are children allowed?
             </AccordionTrigger>
             <AccordionContent>
@@ -226,7 +226,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="social-media">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Is it ok to post wedding photos on social media?
             </AccordionTrigger>
             <AccordionContent>
@@ -238,7 +238,7 @@ export const Faq = () => {
           </AccordionItem>
 
           <AccordionItem value="online-rsvp">
-            <AccordionTrigger className="text-black hover:text-black">
+            <AccordionTrigger className="text-black hover:text-black text-left">
               Can I RSVP online?
             </AccordionTrigger>
             <AccordionContent>
