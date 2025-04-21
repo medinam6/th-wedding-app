@@ -473,10 +473,10 @@ const GuestListManager = () => {
                 </div>
                 <div className="w-[200px]">
                   <Select value={rsvpStatus} onValueChange={value => setRsvpStatus(value)}>
-                    <SelectTrigger className="w-full border border-gray-300 rounded-md p-2 bg-white text-black">
+                    <SelectTrigger className="w-[150px] border border-gray-300 rounded-md p-2 bg-white text-black">
                       <SelectValue placeholder="Select..." />
                     </SelectTrigger>
-                    <SelectContent className="w-[200px] bg-white border border-gray-300 shadow-md">
+                    <SelectContent className="w-[150px] bg-white border border-gray-300 shadow-md">
                       <SelectItem
                         value="All"
                         className="hover:bg-gray-200 focus:bg-gray-300 bg-white text-black"
