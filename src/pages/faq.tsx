@@ -174,10 +174,6 @@ export const Faq = () => {
                 with a choice of entrees. There will be a meat, fish, and vegetarian option
                 available.
               </p>
-              <p className="mt-2">
-                If you have additional restrictions beyond what we&apos;ve listed here, please let
-                us know in the designated section of your digital RSVP.
-              </p>
             </AccordionContent>
           </AccordionItem>
 
