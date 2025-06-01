@@ -9,6 +9,9 @@ const WeddingPage = () => (
         Begins Promptly at 4:00 PM at JW Marriott Las Vegas Resort & Spa
       </p>
       <p className="font-bodo text-black pt-2">221 N Rampart Blvd, Las Vegas, NV 89145</p>
+      <p className="font-bodo text-black pt-2">
+        <a href="/map" className="text-blue-600 hover:underline">Parking & Directions to The Lodge</a>
+      </p>
       <p className="font-bodo text-black text-xl pt-10">COCKTAILS</p>
       <p className="font-bodo text-black pt-2">Immediately Following Ceremony</p>
       <p className="font-bodo text-black text-xl pt-10">DRESSCODE</p>
