@@ -19,7 +19,7 @@ const OurStory = () => (
         words, and I was lost in her presence.
       </p>
       <div class="flex justify-center">
-        <Image src="/back.jpeg" alt="A meaningful description" width={500} height={300} />
+        <Image src="/back.jpeg" alt="A meaningful description" width={500} height={300} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
       </div>
       <p class="font-bodo text-md mb-4 text-black pt-5">
         Through the years, we built a life woven with music, laughter, and quiet moments of
