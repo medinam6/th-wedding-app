@@ -17,7 +17,7 @@ const NavMenu = () => {
     { name: 'REGISTRY', path: '/registry' },
     { name: 'RSVP', path: '/rsvp' },
     { name: 'FAQ', path: '/faq' },
-    { name: 'GALLERY', path: '/gallery' },
+    // { name: 'GALLERY', path: '/gallery' },
   ]
 
   return (

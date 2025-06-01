@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
 
 export const Faq = () => {
   return (
@@ -139,6 +140,38 @@ export const Faq = () => {
             </AccordionContent>
           </AccordionItem>
 
+          <AccordionItem value="colors">
+            <AccordionTrigger className="text-black hover:text-black text-left">
+              Are there any colors I should avoid wearing?
+            </AccordionTrigger>
+            <AccordionContent>
+              <p>
+                We kindly ask the ladies to refrain from wearing white, ivory, champagne, or
+                cream-colored attire.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="examples_women">
+            <AccordionTrigger className="text-black hover:text-black text-left">
+              Dresscode Examples for Women
+            </AccordionTrigger>
+            <AccordionContent>
+              <Image src="/black_tie_examples.jpg" alt="casual dresses" width={500} height={300} />
+              <Image src="/formal_dresses.jpg" alt="casual dresses" width={500} height={300} />
+              <Image src="/casual_dresses.jpg" alt="casual dresses" width={500} height={300} />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="examples_men">
+            <AccordionTrigger className="text-black hover:text-black text-left">
+              Dresscode Examples for Men
+            </AccordionTrigger>
+            <AccordionContent>
+              <Image src="/men_examples.jpg" alt="men examples" width={500} height={300} />
+            </AccordionContent>
+          </AccordionItem>
+
           <AccordionItem value="photos">
             <AccordionTrigger className="text-black hover:text-black text-left">
               Am I allowed to take photos during the ceremony?
@@ -153,18 +186,6 @@ export const Faq = () => {
                 Please avoid blocking the view of our professional photographers who will be
                 capturing every moment. Once we are announced as husband and wife, feel free to take
                 as many pictures and videos as you&apos;d like.
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="colors">
-            <AccordionTrigger className="text-black hover:text-black text-left">
-              Are there any colors I should avoid wearing?
-            </AccordionTrigger>
-            <AccordionContent>
-              <p>
-                We kindly ask the ladies to refrain from wearing white, ivory, champagne, or
-                cream-colored attire.
               </p>
             </AccordionContent>
           </AccordionItem>
