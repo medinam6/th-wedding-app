@@ -72,7 +72,16 @@ export const Faq = () => {
               Have you reserved blocks of rooms at the hotel?
             </AccordionTrigger>
             <AccordionContent>
-              <p>No</p>
+              <p>
+                We have not reserved any room blocks, but you&apos;re welcome to book a room at the
+                wedding venue or nearby hotels. Here are a few great options:
+              </p>
+                <br />
+                <p><a href="https://www.marriott.com/en-us/hotels/lasjw-jw-marriott-las-vegas-the-resort-at-summerlin/rooms/" target="_blank" rel="noopener noreferrer" className='text-blue-600 hover:underline'>JW Marriott Las Vegas Resort & Spa</a>: This is where the wedding will be held! It&apos;s a beautiful resort with lush gardens, a spa, and easy access to everything on the big day.</p>
+              <p><a href="https://www.redrockresort.com/" target="_blank" rel="noopener noreferrer" className='text-blue-600 hover:underline'>Red Rock Casino Resort & Spa</a>: A luxury resort nestled near the Red Rock Canyon, offering fantastic dining and desert views.</p>
+              <p><a href="https://suncoast.boydgaming.com/" target="_blank" rel="noopener noreferrer" className='text-blue-600 hover:underline'>Suncoast Hotel & Casino</a>: A comfortable and convenient option with dining, gaming, and shopping nearby.</p>
+              <br />
+              <p>We recommend booking early to get the best rates and availability.</p>
             </AccordionContent>
           </AccordionItem>
 
