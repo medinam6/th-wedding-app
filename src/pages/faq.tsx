@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
 
 export const Faq = () => {
   return (
@@ -72,7 +73,48 @@ export const Faq = () => {
               Have you reserved blocks of rooms at the hotel?
             </AccordionTrigger>
             <AccordionContent>
-              <p>No</p>
+              <p>
+                We have not reserved any room blocks, but you&apos;re welcome to book a room at the
+                wedding venue or nearby hotels. Here are a few great options:
+              </p>
+              <br />
+              <p>
+                <a
+                  href="https://www.marriott.com/en-us/hotels/lasjw-jw-marriott-las-vegas-the-resort-at-summerlin/rooms/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  JW Marriott Las Vegas Resort & Spa
+                </a>
+                : This is where the wedding will be held! It&apos;s a beautiful resort with lush
+                gardens, a spa, and easy access to everything on the big day.
+              </p>
+              <p>
+                <a
+                  href="https://www.redrockresort.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  Red Rock Casino Resort & Spa
+                </a>
+                : A luxury resort nestled near the Red Rock Canyon, offering fantastic dining and
+                desert views.
+              </p>
+              <p>
+                <a
+                  href="https://suncoast.boydgaming.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  Suncoast Hotel & Casino
+                </a>
+                : A comfortable and convenient option with dining, gaming, and shopping nearby.
+              </p>
+              <br />
+              <p>We recommend booking early to get the best rates and availability.</p>
             </AccordionContent>
           </AccordionItem>
 
@@ -98,6 +140,38 @@ export const Faq = () => {
             </AccordionContent>
           </AccordionItem>
 
+          <AccordionItem value="colors">
+            <AccordionTrigger className="text-black hover:text-black text-left">
+              Are there any colors I should avoid wearing?
+            </AccordionTrigger>
+            <AccordionContent>
+              <p>
+                We kindly ask the ladies to refrain from wearing white, ivory, champagne, or
+                cream-colored attire.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="examples_women">
+            <AccordionTrigger className="text-black hover:text-black text-left">
+              Dresscode Examples for Women
+            </AccordionTrigger>
+            <AccordionContent>
+              <Image src="/black_tie_examples.jpg" alt="casual dresses" width={500} height={300} />
+              <Image src="/formal_dresses.jpg" alt="casual dresses" width={500} height={300} />
+              <Image src="/casual_dresses.jpg" alt="casual dresses" width={500} height={300} />
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="examples_men">
+            <AccordionTrigger className="text-black hover:text-black text-left">
+              Dresscode Examples for Men
+            </AccordionTrigger>
+            <AccordionContent>
+              <Image src="/men_examples.jpg" alt="men examples" width={500} height={300} />
+            </AccordionContent>
+          </AccordionItem>
+
           <AccordionItem value="photos">
             <AccordionTrigger className="text-black hover:text-black text-left">
               Am I allowed to take photos during the ceremony?
@@ -112,18 +186,6 @@ export const Faq = () => {
                 Please avoid blocking the view of our professional photographers who will be
                 capturing every moment. Once we are announced as husband and wife, feel free to take
                 as many pictures and videos as you&apos;d like.
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="colors">
-            <AccordionTrigger className="text-black hover:text-black text-left">
-              Are there any colors I should avoid wearing?
-            </AccordionTrigger>
-            <AccordionContent>
-              <p>
-                We kindly ask the ladies to refrain from wearing white, ivory, champagne, or
-                cream-colored attire.
               </p>
             </AccordionContent>
           </AccordionItem>
