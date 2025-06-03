@@ -19,7 +19,7 @@ const WeddingPage = () => (
       <p className="font-bodo text-black text-xl pt-10">COCKTAILS</p>
       <p className="font-bodo text-black pt-2">Immediately Following Ceremony</p>
       <p className="font-bodo text-black text-xl pt-10">DRESSCODE</p>
-      <p className="font-bodo text-black pt-2">Evening formal</p>
+      <p className="font-bodo text-black pt-2">Formal</p>
     </div>
   </>
 )

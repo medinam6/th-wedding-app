@@ -123,7 +123,7 @@ export const Faq = () => {
               What is the dress code for your wedding?
             </AccordionTrigger>
             <AccordionContent>
-              <p>Evening Formal attire.</p>
+              <p>Formal attire.</p>
               <p className="mt-2">For women:</p>
               <ul className="list-disc ml-6">
                 <li>Tea, ankle, or floor-length dresses.</li>
