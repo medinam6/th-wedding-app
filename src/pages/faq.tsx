@@ -220,8 +220,10 @@ export const Faq = () => {
             </AccordionTrigger>
             <AccordionContent>
               <p>
-                Your presence is the best gift, but if you&apos;d like to give something, we kindly
-                accept contributions via cash or Zelle at hntfinallyeverafter@gmail.com. Thank you!
+                Your presence at our wedding is the greatest gift of all! If you feel inclined to
+                give something, we would be truly grateful for a contribution to help us start our
+                next chapter together. Gifts can be sent directly to hntfinallyeverafter@gmail.com.
+                Thank you so much for your love and support
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -246,7 +248,7 @@ export const Faq = () => {
             <AccordionContent>
               <p>
                 Our wedding will be held outdoors. The ceremony and reception will take place on the
-                lawn, while cocktail hour will be on firm ground.
+                lawn.
               </p>
               <p className="mt-2">
                 We recommend something like this to keep you from sinking into the grass.

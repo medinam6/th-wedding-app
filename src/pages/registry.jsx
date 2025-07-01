@@ -1,15 +1,31 @@
 const Registry = () => (
-  <div>
-    <p className="font-bodo text-5xl p-6 text-center mt-10">
-      Your presence at our wedding is the greatest gift of all!
-    </p>
-    <p className="font-bodo text-xl p-6 text-center">
-      If you would like to give something, we would be grateful for a contribution to help us start
-      our next chapter.
-    </p>
-    <p className="font-bodo text-l text-center">
-      You can send via cash or Zelle to hntfinallyeverafter@gmail.com. Thank you!
-    </p>
+  <div className=" bg-white flex items-center justify-center p-4 mt-4">
+    <div className="max-w-3xl mx-auto">
+      <div className="text-center">
+        <h1 className="font-bodo text-4xl md:text-6xl lg:text-7xl font-black text-black mb-12 leading-tight tracking-tight">
+          Your presence at our wedding is the greatest gift of all!
+        </h1>
+        <div className="w-24 h-0.5 bg-black mx-auto mb-12"></div>
+        <p className="font-bodo text-lg md:text-xl text-black mb-16 max-w-2xl mx-auto leading-relaxed font-light">
+          If you feel inclined to give something, we would be truly grateful for a contribution to
+          help us start our next chapter together.
+        </p>
+        <div className="mb-16">
+          <p className="font-bodo text-lg text-black mb-6 font-medium uppercase tracking-wide">
+            Gifts can be sent directly to
+          </p>
+          <div className="bg-black text-white p-6 inline-block">
+            <p className="font-mono text-lg md:text-xl font-medium">
+              hntfinallyeverafter@gmail.com
+            </p>
+          </div>
+        </div>
+        <p className="font-bodo text-base text-black font-light italic">
+          Thank you so much for your love and support.
+        </p>
+        <div className="w-12 h-0.5 bg-black mx-auto mt-12"></div>
+      </div>
+    </div>
   </div>
 )
 
