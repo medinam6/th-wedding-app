@@ -6,7 +6,7 @@ import 'src/app/globals.css'
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <div className="bg-black fixed w-screen">
+      <div className="fixed w-screen h-20 bg-black z-50"> 
         <Header />
         <NavMenu />
       </div>
