@@ -2,7 +2,7 @@ const Registry = () => (
   <div className=" bg-white flex items-center justify-center p-4 mt-4">
     <div className="max-w-3xl mx-auto">
       <div className="text-center">
-        <h1 className="font-bodo text-4xl md:text-6xl lg:text-7xl font-black text-black mb-12 leading-tight tracking-tight">
+        <h1 className="font-bodo text-4xl md:text-5xl lg:text-7xl font-black text-black mb-12 leading-tight tracking-tight uppercase">
           Your presence at our wedding is the greatest gift of all!
         </h1>
         <div className="w-24 h-0.5 bg-black mx-auto mb-12"></div>
