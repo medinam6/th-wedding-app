@@ -12,7 +12,7 @@ const Registry = () => (
         </p>
         <div className="mb-16">
           <p className="font-bodo text-lg text-black mb-6 font-medium uppercase tracking-wide">
-            We have made it simple through Zelle to
+            We have made it simple through Zelle:
           </p>
           <div className="bg-black text-white p-6 inline-block">
             <p className="font-mono text-lg md:text-xl font-medium">
