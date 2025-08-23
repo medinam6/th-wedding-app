@@ -222,7 +222,7 @@ const RSVPForm = () => {
 
   const renderSearchResults = () => (
     <div className="dpx-16 pt-10 pb-8 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-4xl sm:rounded-lg sm:px-20">
-      <p className="font-pop text-white pb-3 max-w-prose mx-auto">
+      <p className="font-pop text-white pb-3 max-w-prose mx-auto pl-2">
         Select your info below or try searching again.
       </p>
       <hr style={{ borderTop: '1px solid gray' }}></hr>
@@ -263,7 +263,7 @@ const RSVPForm = () => {
             <div key={`${guest._id}-${index}`} className="pb-4 pt-4">
               <div className="flex justify-between items-center">
                 {/* Guest Name */}
-                <div className="pt-4">
+                <div className="pt-4 w-2/3">
                   <span className="font-pop text-white">
                     {guest.firstName} {guest.lastName}{' '}
                   </span>
@@ -312,7 +312,7 @@ const RSVPForm = () => {
                   >
                     Please indicate your choice of Entrée:<span className="text-red-500"> *</span>
                   </p>
-                  <div className="flex justify-center gap-16 mt-2">
+                  <div className="flex justify-evenly mt-2">
                     <label className="flex items-center space-x-2 text-white">
                       <input
                         type="radio"
@@ -406,7 +406,7 @@ const RSVPForm = () => {
       <h2 className="text-xl text-white font-pop font-heavy text-center pb-5">
         Your RSVP Has Been Submitted Successfully!
       </h2>
-      <div className="space-y-4 w-2/3 mx-auto">
+      <div className="space-y-4 w-4/5 mx-auto">
         {guestArray.map((guest, index) => (
           <div className="flex justify-between items-center pb-4" key={`${index}-${guest._id}`}>
             <div className="pt-4">
@@ -414,7 +414,7 @@ const RSVPForm = () => {
                 {guest.firstName} {guest.lastName}{' '}
               </span>
             </div>
-            <div className="pt-4 flex items-center gap-4">
+            <div className="pt-4 flex items-center">
               <div className="flex flex-col items-start">
                 {getRSVPStatuses(guest).map((status, index) => (
                   <div key={index} className="flex items-center gap-2">

@@ -12,7 +12,7 @@ const OurStory = () => (
       <p class="font-bodo text-md mb-4 text-black pt-5">
         On a scorching August day in 2015, fate led us to a table at Public 702. She arrived early,
         waiting in the cool air, while I rushed in, slightly out of breath, apologizing for being
-        late when I wasn’t. She was tall, beautiful, and had the kindest smile. I was instantly
+        late. She was tall, beautiful, and had the kindest smile. I was instantly
         drawn to her. What I didn’t know then was that this woman—who made me nervous in the best
         way—would become my everything. From that first night, conversation flowed effortlessly,
         hours slipping away as if time itself had paused just for us. She was captivated by my
