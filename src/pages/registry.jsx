@@ -7,8 +7,7 @@ const Registry = () => (
         </h1>
         <div className="w-24 h-0.5 bg-black mx-auto mb-12"></div>
         <p className="font-bodo text-lg md:text-xl text-black mb-16 max-w-2xl mx-auto leading-relaxed font-light">
-        If you feel inclined to give something, we would be truly grateful for a contribution to help us start our next chapter together or toward our honeymoon fund.
-        </p>
+        If you feel inclined to give something, we would be truly grateful for a contribution to help us start our next chapter together or toward our honeymoon fund as we create new memories as newlyweds.        </p>
         <div className="mb-16">
           <p className="font-pop text-lg text-black mb-6 font-medium uppercase tracking-wide">
             We have made it simple through Zelle:
